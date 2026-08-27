@@ -1,0 +1,92 @@
+---
+import FormattedDate from './FormattedDate.astro';
+import { categoryHref, tagHref } from '../lib/posts';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  categories: readonly string[];
+  tags?: readonly string[];
+  cover?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { href, title, description, pubDate, categories, tags = [], cover = '', headingLevel = 'h2' } = Astro.props;
+const Heading = headingLevel;
+---
+
+<article class="card">
+  <div class="rail">
+    <FormattedDate date={pubDate} />
+  </div>
+  <div class="body">
+    {cover && <img class="cover" src={cover} alt="" loading="lazy" decoding="async" />}
+    <p class="eyebrow">
+      {categories.map((c) => <a href={categoryHref(c)}>{c}</a>)}
+    </p>
+    <Heading class="title"><a href={href}>{title}</a></Heading>
+    <p class="desc">{description}</p>
+    {
+      tags.length > 0 && (
+        <ul class="tags">
+          {tags.map((t) => (
+            <li>
+              <a href={tagHref(t)}>{t}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .card {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    gap: 0.5rem 1.5rem;
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .rail {
+    padding-top: 0.35rem; /* 제목 첫 줄과 광학 정렬 */
+  }
+  .body {
+    max-width: var(--measure);
+  }
+  .cover {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    width: 100%;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    background: var(--surface);
+  }
+  .title {
+    font-size: var(--text-xl);
+    margin-top: 0.35rem;
+  }
+  .title a:hover {
+    text-decoration-color: var(--accent);
+  }
+  .desc {
+    margin-top: 0.6rem;
+    color: var(--fg-muted);
+  }
+  .tags {
+    margin-top: 0.9rem;
+  }
+
+  @media (max-width: 40rem) {
+    .card {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+      padding-block: 1.5rem;
+    }
+    .rail {
+      padding-top: 0;
+    }
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  date: Date;
+  class?: string;
+}
+
+const { date, class: className } = Astro.props;
+// UTC 기준으로 YYYY-MM-DD — front matter 의 날짜가 타임존에 밀리지 않게
+const iso = date.toISOString().slice(0, 10);
+---
+
+<time class:list={['date', className]} datetime={iso}>{iso}</time>
+
+<style>
+  .date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    color: var(--fg-muted);
+    white-space: nowrap;
+  }
+</style>

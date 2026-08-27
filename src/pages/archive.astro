@@ -1,0 +1,74 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { getPublishedPosts, groupByYear, postHref } from '../lib/posts';
+
+const posts = await getPublishedPosts();
+const years = groupByYear(posts);
+---
+
+<Layout title="Archive" description="연도별 전체 글 목록">
+  <header class="page-head">
+    <h1>Archive</h1>
+    <p>전체 {posts.length}편</p>
+  </header>
+  {
+    years.length === 0 ? (
+      <p class="empty">아직 올린 글이 없습니다.</p>
+    ) : (
+      years.map(({ year, posts }) => (
+        <section class="year">
+          <h2>{year}</h2>
+          <ul>
+            {posts.map((post) => (
+              <li>
+                <FormattedDate date={post.data.pubDate} />
+                <a href={postHref(post)}>{post.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    )
+  }
+</Layout>
+
+<style>
+  .year {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    gap: 0.5rem 1.5rem;
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .year h2 {
+    font-size: var(--text-xl);
+    line-height: 1;
+  }
+  .year ul {
+    list-style: none;
+    max-width: var(--measure);
+  }
+  .year li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 0.5rem;
+  }
+  .year li a {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    line-height: var(--leading-tight);
+  }
+
+  @media (max-width: 40rem) {
+    .year {
+      grid-template-columns: 1fr;
+    }
+    .year li {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+  }
+</style>

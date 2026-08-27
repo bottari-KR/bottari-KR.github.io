@@ -1,0 +1,46 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPublishedPosts, countCategories, categoryHref } from '../../lib/posts';
+
+const posts = await getPublishedPosts();
+const categories = countCategories(posts);
+---
+
+<Layout title="Categories" description="카테고리별 글 목록">
+  <header class="page-head">
+    <h1>Categories</h1>
+  </header>
+  <ul class="list">
+    {
+      categories.map(({ name, count }) => (
+        <li>
+          <a href={categoryHref(name)}>{name}</a>
+          <span class="count">{count}</span>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>
+
+<style>
+  .list {
+    list-style: none;
+    max-width: var(--measure);
+  }
+  .list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+  }
+  .count {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-muted);
+  }
+</style>

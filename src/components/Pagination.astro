@@ -1,0 +1,53 @@
+---
+interface Props {
+  current: number;
+  last: number;
+  prev?: string;
+  next?: string;
+}
+
+const { current, last, prev, next } = Astro.props;
+---
+
+{
+  last > 1 && (
+    <nav class="pagination" aria-label="페이지 이동">
+      {prev ? (
+        <a href={prev} rel="prev">
+          ← 이전
+        </a>
+      ) : (
+        <span aria-hidden="true">← 이전</span>
+      )}
+      <span class="count">
+        {current} / {last}
+      </span>
+      {next ? (
+        <a href={next} rel="next">
+          다음 →
+        </a>
+      ) : (
+        <span aria-hidden="true">다음 →</span>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 2rem;
+    font-size: var(--text-sm);
+  }
+  .pagination > span:not(.count) {
+    color: var(--fg-faint);
+  }
+  .count {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-muted);
+  }
+</style>

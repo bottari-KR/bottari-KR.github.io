@@ -1,0 +1,155 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { getPublishedPosts, postHref, categoryHref, tagHref, type Post } from '../../lib/posts';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts(); // 최신순
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const { title, description, pubDate, categories, tags, cover } = post.data;
+---
+
+<Layout title={title} description={description} ogType="article">
+  <article>
+    <header class="post-head">
+      <p class="eyebrow">
+        <FormattedDate date={pubDate} />
+        {categories.map((c) => <a href={categoryHref(c)}>{c}</a>)}
+      </p>
+      <h1>{title}</h1>
+      <p class="lede">{description}</p>
+      {cover && <img class="cover" src={cover} alt="" decoding="async" />}
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      tags.length > 0 && (
+        <footer class="post-foot">
+          <ul class="tags">
+            {tags.map((t) => (
+              <li>
+                <a href={tagHref(t)}>{t}</a>
+              </li>
+            ))}
+          </ul>
+        </footer>
+      )
+    }
+  </article>
+
+  {
+    (newer || older) && (
+      <nav class="siblings" aria-label="이웃 글">
+        <div>
+          {older && (
+            <a href={postHref(older)} rel="prev">
+              <span class="label">이전 글</span>
+              <span class="name">{older.data.title}</span>
+            </a>
+          )}
+        </div>
+        <div class="next">
+          {newer && (
+            <a href={postHref(newer)} rel="next">
+              <span class="label">다음 글</span>
+              <span class="name">{newer.data.title}</span>
+            </a>
+          )}
+        </div>
+      </nav>
+    )
+  }
+</Layout>
+
+<style>
+  .post-head {
+    padding-block: 3rem 2.5rem;
+    max-width: var(--measure);
+  }
+  .post-head h1 {
+    font-size: var(--text-2xl);
+    margin-top: 0.75rem;
+  }
+  .lede {
+    margin-top: 1rem;
+    font-size: var(--text-lg);
+    color: var(--fg-muted);
+    line-height: 1.55;
+  }
+  .cover {
+    margin-top: 2rem;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .post-foot {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+  }
+
+  .siblings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+  }
+  .siblings .next {
+    text-align: right;
+  }
+  .siblings a {
+    display: inline-block;
+  }
+  .siblings a:hover {
+    text-decoration: none;
+  }
+  .siblings a:hover .name {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--fg-muted);
+    margin-bottom: 0.25rem;
+  }
+  .name {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    line-height: var(--leading-tight);
+  }
+
+  @media (max-width: 40rem) {
+    .siblings {
+      grid-template-columns: 1fr;
+    }
+    .siblings .next {
+      text-align: left;
+    }
+  }
+</style>

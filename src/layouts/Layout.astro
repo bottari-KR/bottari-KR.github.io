@@ -1,0 +1,163 @@
+---
+import '../styles/global.css';
+import { SITE, NAV } from '../site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogType?: 'website' | 'article';
+}
+
+const { title, description = SITE.description, ogType = 'website' } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : SITE.name;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.pathname;
+const path = Astro.url.pathname;
+
+// Home 은 라우트 패턴으로 판정한다 — `/`, `/2/`, `/3/` 은 전부 src/pages/[...page].astro 에서 나온다.
+// (pathname 숫자 매칭은 `/404/` 도 잡아 404 페이지에서 Home 이 현재 페이지로 표시됐다.)
+function isCurrent(href: string) {
+  if (href === '/') return Astro.routePattern === '/[...page]';
+  return path.startsWith(href);
+}
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121314" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title ?? SITE.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ko_KR" />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+    <header class="site-header wrap">
+      <a class="brand" href="/" aria-label={`${SITE.name} 홈`}>{SITE.name}<span class="dot">.</span></a>
+      <nav aria-label="주 메뉴">
+        <ul>
+          {
+            NAV.map((item) => (
+              <li>
+                <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li class="ext">
+            <a href={SITE.github} rel="me">
+              GitHub<span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" class="wrap">
+      <slot />
+    </main>
+
+    <footer class="site-footer wrap">
+      <p>
+        © {new Date().getFullYear()} {SITE.name}
+        <span class="sep" aria-hidden="true">·</span>
+        <a href={SITE.github} rel="me">GitHub</a>
+      </p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 0.5rem 0.75rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    transform: translateY(-120%);
+    transition: transform var(--ease);
+    z-index: 10;
+  }
+  .skip:focus-visible {
+    transform: none;
+    outline-offset: 0;
+    border-radius: 0;
+  }
+
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-block: 1.75rem 0.5rem;
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    letter-spacing: -0.01em;
+    font-weight: 500;
+  }
+  .brand:hover {
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .dot {
+    color: var(--accent);
+  }
+
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    list-style: none;
+    font-size: var(--text-sm);
+    color: var(--fg-muted);
+  }
+  nav a[aria-current='page'] {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1.5px;
+  }
+  .ext a span {
+    font-size: 0.75em;
+    margin-left: 0.15em;
+  }
+
+  main {
+    min-height: 60vh;
+    padding-bottom: 5rem;
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    padding-block: 2rem 3rem;
+    font-size: var(--text-sm);
+    color: var(--fg-muted);
+  }
+  .site-footer a {
+    /* 문장 속 링크 — 색만으로 구분하지 않는다 */
+    text-decoration: underline;
+    text-decoration-color: var(--fg-faint);
+  }
+  .sep {
+    margin-inline: 0.5rem;
+  }
+</style>
