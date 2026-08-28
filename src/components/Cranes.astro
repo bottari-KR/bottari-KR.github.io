@@ -171,42 +171,143 @@ const cranes = FLOCKS[flock];
 </div>
 
 <script>
-  // 두루미 비행: pointerenter → 이륙(날개 위) → 바라보는 쪽으로 날아감 → 잠시 사라짐 → 반대쪽 위에서 돌아와 착지.
-  // 자세는 data-state(land/fly), 이동은 WAAPI translate/rotate(.flip 은 scale 이라 합성된다 — transform 아님).
+  // 두루미 비행: pointerenter → 이륙(날개 위) → 바라보는 쪽으로 날아감 → 잠시 사라짐 → 반대쪽에서 돌아와 착지.
+  // 자세는 data-state(land/fly/glide), 이동은 WAAPI translate/rotate(.flip 은 scale 이라 합성된다 — transform 아님).
+  // 2026-08-28 2차 피드백("날아가다 갑자기 빨라진다 · 비행·착지가 다 똑같다 · 더 자연스럽게"):
+  //  - 경로는 3차 베지어를 호 길이로 다시 샘플링해 등속(px/s 고정). 이륙 첫 0.12 구간만 가속, 착지 마지막 0.25 구간만 감속.
+  //  - 기울기는 경로 접선에서 계산(오르면 코가 위, 내리면 아래), 착지 직전 플레어(코 들기).
+  //  - 이륙 경로 4종 · 복귀 경로 4종 · 착지 마무리 3종을 매번 무작위로 고르고, 체공 시간·날갯짓 주기도 조금씩 다르다.
+  //  - 복귀 중간은 활공(날개 위로 고정), 착지 가까워지면 다시 날갯짓.
+  // 좌표는 두루미의 현재 위치와 화면 크기로 계산한다 — 시작·끝점이 항상 화면 밖이라 튀어나오듯 나타나지 않는다.
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const rnd = (a: number, b: number) => a + Math.random() * (b - a);
+  const pick = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
+  type Pt = [number, number];
+  /** 제어점은 (u, v): u = 바라보는 방향으로 +, v = 위로 +. S = 앞쪽 화면 밖까지, B = 뒤쪽 화면 밖까지, U = 위쪽 화면 밖까지(px) */
+  type PathFn = (S: number, B: number, U: number) => [Pt, Pt, Pt, Pt];
+  const TAKEOFFS: PathFn[] = [
+    (S, _B, U) => [[0, 0], [0.12 * S, 0.03 * U], [0.45 * S, 0.45 * U], [1.0 * S, 1.05 * U]], // 완만히 올라 멀리
+    (S, _B, U) => [[0, 0], [0.03 * S, 0.35 * U], [0.35 * S, 0.75 * U], [1.0 * S, 0.85 * U]], // 훌쩍 떠서 옆으로
+    (S, _B, U) => [[0, 0], [0.35 * S, 0.06 * U], [0.7 * S, 0.15 * U], [1.0 * S, 0.55 * U]], // 패널 위를 낮게 스치다 상승
+    (S, _B, U) => [[0, 0], [0.05 * S, 0.4 * U], [0.18 * S, 0.8 * U], [0.35 * S, 1.15 * U]], // 가파르게 위로
+  ];
+  const RETURNS: PathFn[] = [
+    (_S, B, U) => [[-1.0 * B, 0.9 * U], [-0.55 * B, 0.55 * U], [-0.18 * B, 0.12 * U], [0, 0]], // 멀리서 긴 활공
+    (_S, B, U) => [[-0.35 * B, 1.15 * U], [-0.45 * B, 0.6 * U], [-0.25 * B, 0.15 * U], [0, 0]], // 위에서 내려앉기
+    (_S, B, U) => [[-1.0 * B, 0.4 * U], [-0.6 * B, 0.12 * U], [-0.25 * B, 0.02 * U], [0, 0]], // 낮게 다가와 착지
+    (_S, B, U) => [[-0.9 * B, 1.1 * U], [-0.25 * B, 0.95 * U], [-0.3 * B, 0.25 * U], [0, 0]], // 돌아 들어와 급강하 뒤 플레어
+  ];
+  const SPEED = 760; // px/s — 모든 경로 공통
+  const FLARE = 0.25; // 복귀 마지막 감속 구간(비율)
+
+  function bez(p: [Pt, Pt, Pt, Pt], t: number): Pt {
+    const m = 1 - t;
+    const a = m * m * m, b = 3 * m * m * t, c = 3 * m * t * t, d = t * t * t;
+    return [a * p[0][0] + b * p[1][0] + c * p[2][0] + d * p[3][0], a * p[0][1] + b * p[1][1] + c * p[2][1] + d * p[3][1]];
+  }
+
+  /** 경로 → 등속 키프레임. face 로 u 를 화면 x 로, v 는 -y 로. profile: 시간→거리 비율(가속·감속) */
+  function keyframes(p: [Pt, Pt, Pt, Pt], face: number, mode: 'out' | 'back') {
+    const N = 240;
+    const pts: Pt[] = [];
+    const cum: number[] = [0];
+    for (let i = 0; i <= N; i++) {
+      const [u, v] = bez(p, i / N);
+      pts.push([face * u, -v]);
+      if (i) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+    }
+    const L = cum[N];
+    // 속도 프로필을 적분해 시간→거리 표를 만든다
+    const K = 48;
+    const vel = (t: number) =>
+      mode === 'out' ? (t < 0.12 ? 0.3 + (0.7 * t) / 0.12 : 1) : t > 1 - FLARE ? 1 - (0.7 * (t - (1 - FLARE))) / FLARE : 1;
+    const dist: number[] = [0];
+    for (let i = 1; i <= K; i++) dist.push(dist[i - 1] + (vel((i - 0.5) / K) + vel(i / K)) / 2);
+    const meanV = dist[K] / K;
+    const duration = (L / (SPEED * meanV)) * 1000; // ms. 프로필 평균 속도로 보정해 SPEED 가 순항 속도가 되게
+    const forward = face === 1 ? 0 : 180;
+    const noseUp = face === 1 ? -1 : 1; // CSS rotate 는 시계방향 +. 왼쪽 보는 새는 + 가 코 들기
+    const frames = [];
+    let j = 0;
+    for (let i = 0; i <= K; i++) {
+      const s = (dist[i] / dist[K]) * L;
+      while (j < N - 1 && cum[j + 1] < s) j++;
+      const seg = cum[j + 1] - cum[j] || 1;
+      const f = Math.min(1, Math.max(0, (s - cum[j]) / seg));
+      const x = pts[j][0] + (pts[j + 1][0] - pts[j][0]) * f;
+      const y = pts[j][1] + (pts[j + 1][1] - pts[j][1]) * f;
+      // 접선 → 기울기(±26° 로 제한, 0.7 배로 눌러 과장 방지)
+      const k1 = Math.max(0, j - 2), k2 = Math.min(N, j + 3);
+      let ang = (Math.atan2(pts[k2][1] - pts[k1][1], pts[k2][0] - pts[k1][0]) * 180) / Math.PI - forward;
+      ang = ((ang + 540) % 360) - 180;
+      let rot = Math.max(-26, Math.min(26, ang * 0.7));
+      const t = i / K;
+      // 착지 플레어: 마지막 15% 에서 코를 든다. 이륙·비행 중에는 잔잔한 상하 흔들림
+      if (mode === 'back' && t > 0.85) rot += noseUp * 9 * ((t - 0.85) / 0.15);
+      const bob = mode === 'back' && t > 0.8 ? 0 : 2.5 * Math.sin((t * duration) / 110);
+      frames.push({ translate: `${x.toFixed(1)}px ${(y + bob).toFixed(1)}px`, rotate: `${rot.toFixed(1)}deg`, offset: t, easing: 'linear' });
+    }
+    // 끝점은 정확히 제자리/목표점
+    const last = frames[frames.length - 1];
+    if (mode === 'back') last.translate = '0px 0px';
+    if (mode === 'back') last.rotate = `${(noseUp * 6).toFixed(1)}deg`;
+    return { frames, duration };
+  }
 
   async function fly(el: SVGSVGElement) {
     if (REDUCED || el.dataset.state) return;
     const face = Number(el.dataset.face) || -1; // -1 = 왼쪽을 본다(기본), 1 = 오른쪽(거울)
+    const r = el.getBoundingClientRect();
+    const W = innerWidth;
+    const S = (face === 1 ? W - r.left : r.right) + 60; // 앞쪽으로 화면 밖까지
+    const B = (face === 1 ? r.right : W - r.left) + 60; // 뒤쪽으로 화면 밖까지
+    const U = r.bottom + 60; // 위로 화면 밖까지
+    el.style.setProperty('--flap', `${Math.round(rnd(250, 330))}ms`);
+
+    // 이륙
     el.dataset.state = 'land';
-    await wait(150);
+    await wait(rnd(110, 240));
     el.dataset.state = 'fly';
-    const out = el.animate(
-      [
-        { translate: '0 0', rotate: '0deg' },
-        { translate: `${face * 14}vw -14vh`, rotate: `${face * 14}deg`, offset: 0.4 },
-        { translate: `${face * 60}vw -80vh`, rotate: `${face * 8}deg` },
-      ],
-      { duration: 1500, easing: 'cubic-bezier(0.45, 0, 0.85, 0.45)', fill: 'forwards' },
-    );
-    await out.finished;
+    const out = keyframes(pick(TAKEOFFS)(S, B, U), face, 'out');
+    const a1 = el.animate(out.frames, { duration: out.duration, fill: 'forwards' });
+    await a1.finished;
+
+    // 체공(화면 밖)
     el.style.visibility = 'hidden';
-    await wait(2400);
+    await wait(rnd(1700, 3200));
+
+    // 복귀: 중간은 활공, 가까워지면 날갯짓, 직전에 착지 자세. 애니메이션을 먼저 걸고 보이게 한다(이륙 끝점에서 한 프레임 안 튀게)
+    const back = keyframes(pick(RETURNS)(S, B, U), face, 'back');
+    const a2 = el.animate(back.frames, { duration: back.duration, fill: 'forwards' });
+    a1.cancel();
     el.style.visibility = '';
-    const back = el.animate(
-      [
-        { translate: `${-face * 60}vw -70vh`, rotate: `${-face * 5}deg` },
-        { translate: `${-face * 14}vw -16vh`, rotate: `${-face * 7}deg`, offset: 0.7 },
-        { translate: '0 0', rotate: '0deg' },
-      ],
-      { duration: 1700, easing: 'cubic-bezier(0.2, 0.6, 0.3, 1)', fill: 'forwards' },
-    );
-    setTimeout(() => (el.dataset.state = 'land'), 1300);
-    await back.finished;
-    out.cancel();
-    back.cancel();
-    await wait(180);
+    const D = back.duration;
+    const glideFrom = rnd(0.12, 0.25), glideTo = rnd(0.55, 0.7);
+    setTimeout(() => (el.dataset.state = 'glide'), D * glideFrom);
+    setTimeout(() => (el.dataset.state = 'fly'), D * glideTo);
+    setTimeout(() => (el.dataset.state = 'land'), D - 280);
+    await a2.finished;
+    a1.cancel();
+    a2.cancel();
+
+    // 착지 마무리 3종
+    const finish = pick(['hold', 'hop', 'shake']);
+    if (finish === 'hop') {
+      await el.animate(
+        [{ translate: '0 0' }, { translate: '0 -5px', offset: 0.45 }, { translate: '0 0' }],
+        { duration: 260, easing: 'ease-out' },
+      ).finished;
+      await wait(120);
+    } else if (finish === 'shake') {
+      await wait(140);
+      delete el.dataset.state;
+      await wait(260);
+      el.dataset.state = 'land';
+      await wait(170);
+    } else {
+      await wait(rnd(180, 320));
+    }
     // 커서가 아직 제자리 위에 있으면 착지하자마자 다시 뜨지 않게 — 커서가 떠난 뒤(pointerleave)에야 다음 비행
     if (el.matches(':hover')) el.dataset.state = 'rest';
     else delete el.dataset.state;
@@ -262,7 +363,8 @@ const cranes = FLOCKS[flock];
     display: none;
   }
   .crane[data-state='land'] .u-stand,
-  .crane[data-state='fly'] .u-stand {
+  .crane[data-state='fly'] .u-stand,
+  .crane[data-state='glide'] .u-stand {
     display: none;
   }
   .crane[data-state='land'] .u-land {
@@ -270,10 +372,14 @@ const cranes = FLOCKS[flock];
   }
   .crane[data-state='fly'] .u-fly {
     display: inline;
-    animation: flap 280ms steps(1, end) infinite;
+    animation: flap var(--flap, 280ms) steps(1, end) infinite;
   }
   .crane[data-state='fly'] .u-fly-down {
-    animation-delay: -140ms;
+    animation-delay: calc(var(--flap, 280ms) / -2);
+  }
+  /* 활공 — 날개 위로 고정 */
+  .crane[data-state='glide'] .u-fly-up {
+    display: inline;
   }
   @keyframes flap {
     0% {
