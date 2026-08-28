@@ -1,0 +1,113 @@
+---
+// 목록 페이지 공통 틀(카테고리·태그·아카이브·문의와 그 하위 페이지) — 2026-08-28 사용자 결정:
+// 구조는 ruby-kim.github.io(가운데 제목 띠 + 그 아래 흰 패널), 생김새는 홈과 같은 종이(--hero-*) + 그레인 + 산호색 원.
+// Layout 은 hero={true} 로 불러 헤더가 띠 위에 얹히고 main 에 wrap 이 없다 — 패널이 스스로 폭을 잡는다.
+interface Props {
+  title: string;
+  /** 제목 아래 한 줄 — "3개 분류", "12편" 등 */
+  sub?: string;
+  /** 패널 최대 폭. 기본 72rem(아카이브·태그 격자), narrow 는 60rem(문의) */
+  width?: 'wide' | 'narrow';
+}
+
+const { title, sub, width = 'wide' } = Astro.props;
+---
+
+<div class="shell grain">
+  <header class="band">
+    <picture class="blob-wrap">
+      <source srcset="/media/hero-blob-dark.webp" media="(prefers-color-scheme: dark)" />
+      <img class="blob" src="/media/hero-blob.webp" alt="" width="1200" height="1200" decoding="async" />
+    </picture>
+    <div class="band-text">
+      <h1>{title}</h1>
+      {sub && <p class="sub">{sub}</p>}
+    </div>
+  </header>
+
+  <div class:list={['panel', width]}>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .shell {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--hero-bg);
+    color: var(--hero-fg);
+    padding-bottom: clamp(3rem, 8vh, 6rem);
+  }
+
+  .band {
+    position: relative;
+    text-align: center;
+    /* 위는 얹힌 헤더(≈5rem) 아래에서 시작 */
+    padding: clamp(8rem, 22vh, 12rem) var(--hero-inset) clamp(5rem, 12vh, 8rem);
+  }
+  .band-text {
+    position: relative;
+    z-index: 1;
+  }
+  h1 {
+    font-size: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .sub {
+    margin-top: 1rem;
+    font-size: var(--text-base);
+    color: var(--hero-fg-muted);
+  }
+
+  /* 띠 오른쪽 가장자리에 원 — 홈·소개와 같은 모티프. 헤더 글자(맨 위 ≈5rem)에는 안 닿게 띠 중간 아래에 둔다 */
+  .blob-wrap {
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    top: 62%;
+    width: min(40vw, 28rem);
+    aspect-ratio: 1;
+    translate: 42% -50%;
+    pointer-events: none;
+  }
+  .blob {
+    width: 100%;
+    height: auto;
+    max-width: none;
+    user-select: none;
+  }
+
+  .panel {
+    position: relative;
+    z-index: 1;
+    margin-inline: auto;
+    width: calc(100% - 2 * var(--hero-inset));
+    max-width: 72rem;
+    background: var(--panel-bg);
+    color: var(--fg);
+    border: 1px solid var(--panel-rule);
+    border-radius: 14px;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -16px rgb(0 0 0 / 0.18);
+  }
+  .panel.narrow {
+    max-width: 60rem;
+  }
+
+  @media (max-width: 40rem) {
+    .band {
+      padding-top: clamp(9rem, 24vh, 11rem);
+    }
+    .blob-wrap {
+      width: 60vw;
+      top: 70%;
+      translate: 45% -50%;
+    }
+    .panel {
+      border-radius: 10px;
+    }
+  }
+</style>

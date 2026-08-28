@@ -1,43 +1,86 @@
 ---
+// 태그 목록 — ruby-kim.github.io/tags 구조: 타일 격자, 타일마다 글 수(크게) + 태그 이름 + 최신 글 제목. 사진 대신 종이색 타일.
 import Layout from '../../layouts/Layout.astro';
-import { getPublishedPosts, countTags, tagHref } from '../../lib/posts';
+import ListShell from '../../components/ListShell.astro';
+import { getPublishedPosts, countTags, tagHref, postHref } from '../../lib/posts';
 
 const posts = await getPublishedPosts();
-const tags = countTags(posts);
+const tags = countTags(posts).map(({ name, count }) => ({
+  name,
+  count,
+  latest: posts.find((p) => p.data.tags.includes(name)),
+}));
 ---
 
-<Layout title="태그" description="태그별 글 목록">
-  <header class="page-head">
-    <h1>태그</h1>
-  </header>
-  {
-    tags.length === 0 ? (
-      <p class="empty">아직 태그가 없습니다.</p>
-    ) : (
-      <ul class="tags cloud">
-        {tags.map(({ name, count }) => (
-          <li>
-            <a href={tagHref(name)}>{name}</a>
-            <span class="count">{count}</span>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+<Layout title="태그" description="태그별 글 목록" hero>
+  <ListShell title="태그" sub={`${tags.length}개 태그`}>
+    {
+      tags.length === 0 ? (
+        <p class="empty">아직 태그가 없습니다.</p>
+      ) : (
+        <ul class="grid">
+          {tags.map(({ name, count, latest }) => (
+            <li class="tile">
+              <a class="tile-link" href={tagHref(name)}>
+                <span class="count">{count}</span>
+                <span class="name">{name}</span>
+                {latest && <span class="latest">{latest.data.title}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </ListShell>
 </Layout>
 
 <style>
-  .cloud {
-    padding-top: 2rem;
-    gap: 0.75rem 1.5rem;
-    font-size: var(--text-base);
-    max-width: var(--measure);
+  .empty {
+    padding-block: 1.5rem;
+  }
+  .grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 0.75rem;
+  }
+  .tile-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-height: 7.5rem;
+    padding: 1rem 1.1rem;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    transition: border-color var(--ease), background-color var(--ease);
+  }
+  .tile-link:hover {
+    text-decoration: none;
+    border-color: var(--accent);
+    color: inherit;
   }
   .count {
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--hero-blob);
+  }
+  .name {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: 700;
+    margin-top: 0.35rem;
+  }
+  .latest {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: var(--text-xs);
     color: var(--fg-muted);
-    margin-left: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

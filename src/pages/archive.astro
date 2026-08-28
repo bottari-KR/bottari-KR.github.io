@@ -1,74 +1,196 @@
 ---
+// 아카이브 — ruby-kim.github.io/archives 구조: 왼쪽 연도 목록(앵커), 오른쪽 연도 제목 + 글 수, 월별 묶음,
+// 행 = 날짜(MM.DD) · 제목 · 카테고리.
 import Layout from '../layouts/Layout.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import { getPublishedPosts, groupByYear, postHref } from '../lib/posts';
+import ListShell from '../components/ListShell.astro';
+import { getPublishedPosts, groupByYear, postHref, categoryHref, type Post } from '../lib/posts';
 
 const posts = await getPublishedPosts();
 const years = groupByYear(posts);
+
+function byMonth(list: Post[]): Array<{ month: number; posts: Post[] }> {
+  const m = new Map<number, Post[]>();
+  for (const p of list) {
+    const k = p.data.pubDate.getUTCMonth() + 1;
+    if (!m.has(k)) m.set(k, []);
+    m.get(k)!.push(p);
+  }
+  return [...m].sort((a, b) => b[0] - a[0]).map(([month, posts]) => ({ month, posts }));
+}
+const mmdd = (d: Date) => d.toISOString().slice(5, 10).replace('-', '.');
 ---
 
-<Layout title="아카이브" description="연도별 전체 글 목록">
-  <header class="page-head">
-    <h1>아카이브</h1>
-    <p>전체 {posts.length}편</p>
-  </header>
-  {
-    years.length === 0 ? (
-      <p class="empty">아직 올린 글이 없습니다.</p>
-    ) : (
-      years.map(({ year, posts }) => (
-        <section class="year">
-          <h2>{year}</h2>
-          <ul>
-            {posts.map((post) => (
-              <li>
-                <FormattedDate date={post.data.pubDate} />
-                <a href={postHref(post)}>{post.data.title}</a>
-              </li>
+<Layout title="아카이브" description="연도별 전체 글 목록" hero>
+  <ListShell title="아카이브" sub={`${posts.length}개의 글`}>
+    {
+      years.length === 0 ? (
+        <p class="empty">아직 올린 글이 없습니다.</p>
+      ) : (
+        <div class="archive">
+          <nav class="years" aria-label="연도">
+            <ul>
+              {years.map(({ year }, i) => (
+                <li>
+                  <a href={`#y${year}`} class:list={[{ active: i === 0 }]}>
+                    {year}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div class="body">
+            {years.map(({ year, posts }) => (
+              <section class="year" id={`y${year}`} aria-labelledby={`y${year}-h`}>
+                <h2 id={`y${year}-h`}>
+                  {year} <span class="n">{posts.length}편</span>
+                </h2>
+                {byMonth(posts).map(({ month, posts }) => (
+                  <div class="month">
+                    <h3>{month}월</h3>
+                    <ul>
+                      {posts.map((post) => (
+                        <li>
+                          <time class="d" datetime={post.data.pubDate.toISOString().slice(0, 10)}>
+                            {mmdd(post.data.pubDate)}
+                          </time>
+                          <a class="t" href={postHref(post)}>
+                            {post.data.title}
+                          </a>
+                          <span class="c">
+                            {post.data.categories.map((c) => (
+                              <a href={categoryHref(c)}>{c}</a>
+                            ))}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </section>
             ))}
-          </ul>
-        </section>
-      ))
-    )
-  }
+          </div>
+        </div>
+      )
+    }
+  </ListShell>
 </Layout>
 
 <style>
-  .year {
+  .empty {
+    padding-block: 1.5rem;
+  }
+  .archive {
     display: grid;
-    grid-template-columns: var(--rail) minmax(0, 1fr);
-    gap: 0.5rem 1.5rem;
-    padding-block: 2rem;
-    border-bottom: 1px solid var(--rule);
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 2rem 2.5rem;
+    align-items: start;
+  }
+  .years {
+    position: sticky;
+    top: 1.5rem;
+  }
+  .years ul {
+    list-style: none;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .years a {
+    display: block;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-muted);
+  }
+  .years a:hover {
+    background: var(--surface);
+    text-decoration: none;
+    color: var(--fg);
+  }
+  .years a.active {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .year + .year {
+    margin-top: 3rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--rule);
   }
   .year h2 {
     font-size: var(--text-xl);
-    line-height: 1;
+    scroll-margin-top: 2rem;
   }
-  .year ul {
+  .n {
+    margin-left: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--fg-muted);
+  }
+  .month {
+    margin-top: 1.5rem;
+  }
+  .month h3 {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--fg-muted);
+  }
+  .month ul {
     list-style: none;
-    max-width: var(--measure);
+    margin-top: 0.5rem;
   }
-  .year li {
+  .month li {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto;
     gap: 1rem;
     align-items: baseline;
-    padding-block: 0.5rem;
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--rule);
   }
-  .year li a {
+  .month li:last-child {
+    border-bottom: 0;
+  }
+  .d {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-muted);
+  }
+  .t {
     font-family: var(--font-display);
-    font-size: var(--text-lg);
+    font-weight: 600;
     line-height: var(--leading-tight);
+  }
+  .c {
+    display: flex;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+    color: var(--fg-muted);
+    white-space: nowrap;
   }
 
   @media (max-width: 40rem) {
-    .year {
+    .archive {
       grid-template-columns: 1fr;
     }
-    .year li {
-      grid-template-columns: 1fr;
-      gap: 0.15rem;
+    .years {
+      position: static;
+    }
+    .years ul {
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      overflow-x: auto;
+    }
+    .month li {
+      grid-template-columns: 3.5rem minmax(0, 1fr);
+    }
+    .c {
+      grid-column: 2;
     }
   }
 </style>

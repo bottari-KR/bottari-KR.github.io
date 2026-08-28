@@ -29,4 +29,4 @@ export const NAV = [
   { href: '/about/', label: '소개', icon: 'user' },
   { href: '/contact/', label: '문의', icon: 'inquiry' },
 ] as const;
-export type NavIconName = (typeof NAV)[number]['icon'] | 'github';
+export type NavIconName = (typeof NAV)[number]['icon'] | 'github' | 'mail';

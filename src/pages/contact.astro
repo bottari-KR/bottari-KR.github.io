@@ -1,22 +1,166 @@
 ---
+// 문의 — ruby-kim.github.io/contact 구조: 위 요약 줄(운영자 · 연락처 · 회신), 연락 카드, 아래 본문 절.
+// 내용은 src/data/contact.ts 에서만 고친다 — 지금은 임시 자리표시.
 import Layout from '../layouts/Layout.astro';
+import ListShell from '../components/ListShell.astro';
+import NavIcon from '../components/NavIcon.astro';
 import { SITE } from '../site';
-// 본문은 사용자가 정한다 — 에이전트가 지어내지 않는다. 공개할 연락 수단만 아래 목록에 넣는다.
+import { CONTACT } from '../data/contact';
 ---
 
-<Layout title="문의" description={`${SITE.name} 연락처`}>
-  <header class="page-head">
-    <h1>문의</h1>
-  </header>
-  <section class="prose">
-    <ul>
-      <li>GitHub — <a href={SITE.github} rel="me">{SITE.github.replace('https://', '')}</a></li>
+<Layout title="문의" description={`${SITE.name} 연락처`} hero>
+  <ListShell title="문의" sub="글 오류 제보 · 협업 제안" width="narrow">
+    <dl class="meta">
+      <div>
+        <dt>운영자</dt>
+        <dd>{CONTACT.owner}</dd>
+      </div>
+      <div>
+        <dt>연락처</dt>
+        <dd>{CONTACT.email}</dd>
+      </div>
+      <div>
+        <dt>회신</dt>
+        <dd>{CONTACT.replyWithin}</dd>
+      </div>
+    </dl>
+
+    <ul class="cards">
+      {
+        CONTACT.channels.map((ch) => (
+          <li>
+            {ch.href ? (
+              <a class="card" href={ch.href} rel="me">
+                <span class="ico">
+                  <NavIcon name={ch.icon} />
+                </span>
+                <span class="txt">
+                  <span class="label">{ch.label}</span>
+                  <span class="value">{ch.value}</span>
+                </span>
+              </a>
+            ) : (
+              <div class="card">
+                <span class="ico">
+                  <NavIcon name={ch.icon} />
+                </span>
+                <span class="txt">
+                  <span class="label">{ch.label}</span>
+                  <span class="value">{ch.value}</span>
+                </span>
+              </div>
+            )}
+          </li>
+        ))
+      }
     </ul>
-  </section>
+
+    <div class="sections">
+      {
+        CONTACT.sections.map((s) => (
+          <section>
+            <h2>{s.heading}</h2>
+            {s.body.map((line) => (
+              <p>{line}</p>
+            ))}
+          </section>
+        ))
+      }
+    </div>
+  </ListShell>
 </Layout>
 
 <style>
-  section {
-    padding-top: 2rem;
+  .meta {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  dt {
+    font-size: var(--text-xs);
+    color: var(--fg-muted);
+    letter-spacing: 0.02em;
+  }
+  dd {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .cards {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    background: var(--surface);
+    transition: border-color var(--ease);
+  }
+  a.card:hover {
+    text-decoration: none;
+    color: inherit;
+    border-color: var(--accent);
+  }
+  .ico {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 8px;
+    background: var(--panel-bg);
+    border: 1px solid var(--rule);
+    font-size: 1.1rem;
+  }
+  .ico :global(.nav-icon) {
+    margin: 0;
+  }
+  .txt {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .label {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+  .value {
+    font-size: var(--text-sm);
+    color: var(--fg-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .sections {
+    margin-top: 2rem;
+    display: grid;
+    gap: 1.75rem;
+  }
+  .sections h2 {
+    font-size: var(--text-lg);
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--hero-blob);
+  }
+  .sections p {
+    margin-top: 0.6rem;
+    color: var(--fg-muted);
+    max-width: var(--measure);
+  }
+
+  @media (max-width: 40rem) {
+    .meta {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
   }
 </style>

@@ -1,11 +1,12 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import Layout from '../../layouts/Layout.astro';
+import ListShell from '../../components/ListShell.astro';
 import PostCard from '../../components/PostCard.astro';
 import { CATEGORIES } from '../../site';
 import { getPublishedPosts, postHref, type Post } from '../../lib/posts';
 
-// 글이 없는 카테고리도 페이지를 만든다 — Categories 목록의 링크가 404 로 가지 않게.
+// 글이 없는 카테고리도 페이지를 만든다 — 카테고리 목록의 링크가 404 로 가지 않게.
 export const getStaticPaths = (async () => {
   const posts = await getPublishedPosts();
   return CATEGORIES.map((category) => ({
@@ -22,34 +23,37 @@ interface Props {
 const { category, posts } = Astro.props;
 ---
 
-<Layout title={category} description={`${category} 카테고리의 글`}>
-  <header class="page-head">
-    <p class="eyebrow"><a href="/categories/">카테고리</a></p>
-    <h1>{category}</h1>
-  </header>
-  {
-    posts.length === 0 ? (
-      <p class="empty">이 카테고리에는 아직 글이 없습니다.</p>
-    ) : (
-      <section aria-label={`${category} 글 목록`}>
-        {posts.map((post) => (
-          <PostCard
-            href={postHref(post)}
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            categories={post.data.categories}
-            tags={post.data.tags}
-            cover={post.data.cover}
-          />
-        ))}
-      </section>
-    )
-  }
+<Layout title={category} description={`${category} 카테고리의 글`} hero>
+  <ListShell title={category} sub={`카테고리 · ${posts.length}편`}>
+    <p class="crumb"><a href="/categories/">← 카테고리 전체</a></p>
+    {
+      posts.length === 0 ? (
+        <p class="empty">이 카테고리에는 아직 글이 없습니다.</p>
+      ) : (
+        <section aria-label={`${category} 글 목록`}>
+          {posts.map((post) => (
+            <PostCard
+              href={postHref(post)}
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              categories={post.data.categories}
+              tags={post.data.tags}
+              cover={post.data.cover}
+            />
+          ))}
+        </section>
+      )
+    }
+  </ListShell>
 </Layout>
 
 <style>
-  .page-head h1 {
-    margin-top: 0.5rem;
+  .crumb {
+    font-size: var(--text-sm);
+    color: var(--fg-muted);
+  }
+  .empty {
+    padding-block: 2rem 1rem;
   }
 </style>
