@@ -18,12 +18,9 @@ npm run dev               # 로컬 미리보기 (draft 도 보인다)
 
 `main`에 push하면 `.github/workflows/deploy.yml`이 빌드해서 배포한다.
 
-## 미디어 출처
+## 출처
 
-- `public/media/hero-forest.mp4` · `hero-forest-*.jpg` — "Aerial View of Verdant Forest Canopy", Chris The Island,
-  Pexels https://www.pexels.com/video/aerial-view-of-verdant-forest-canopy-35724530/
-  (Pexels License https://www.pexels.com/license/ — 무료 사용, 표기 의무 없음).
-  Pexels HD 다운로드본(1280×720 60fps)을 9초 · 24fps · H.264 CRF 33 · 무음으로 재인코딩하고, 끝 1초를 처음 1초에
-  크로스페이드해 이음새 없는 루프로 만들었다. 포스터 jpg 는 루프 첫 프레임(progressive).
-- `public/media/`는 git에 직접 커밋한다 — LFS 금지(`actions/checkout` 기본이 `lfs: false`라 포인터 파일이 배포된다).
-  재인코딩 교체는 이력에 쌓이니 최소화.
+- 홈 히어로 일러스트(`src/components/Bucket.astro`) — 21st.dev 계열 "Bucket" React 컴포넌트(motion/react + shadcn)를
+  Astro 네이티브로 옮긴 것. SVG 마크업은 원본 그대로, 카드 낙하 애니메이션은 CSS 키프레임(React·Tailwind 없음).
+- 카드 아이콘(`src/components/icons.ts`) — [Hugeicons](https://hugeicons.com) Free, MIT(`@hugeicons/core-free-icons` 4.3.0)의
+  `SecurityCheck` · `Zap` · `UserStory` · `Sparkles` path 데이터를 인라인. 패키지는 빌드에 쓰지 않는다.

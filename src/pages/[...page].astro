@@ -7,7 +7,7 @@ import Pagination from '../components/Pagination.astro';
 import { SITE } from '../site';
 import { getPublishedPosts, postHref, type Post } from '../lib/posts';
 
-// 홈 = 숲 히어로 + 글 카드 목록. `/` 가 1쪽, `/2/` `/3/` … 이 다음 쪽(2쪽부터는 히어로 없이 목록만).
+// 홈 = 히어로(문구 + 바구니 애니메이션) + 글 카드 목록. `/` 가 1쪽, `/2/` `/3/` … 이 다음 쪽(2쪽부터는 히어로 없이 목록만).
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getPublishedPosts();
   return paginate(posts, { pageSize: SITE.pageSize });
@@ -22,11 +22,10 @@ const first = page.currentPage === 1;
 const title = first ? undefined : `${page.currentPage}쪽`;
 ---
 
-<Layout title={title} hero={first}>
+<Layout title={title}>
   {first ? <Hero /> : <h1 class="sr-only">{SITE.description}</h1>}
 
-  {/* 1쪽은 <main> 에 wrap 이 없어 여기서 준다. 2쪽 이후는 main.wrap 이라 또 주면 이중 여백. */}
-  <div class:list={[{ wrap: first, 'after-hero': first }]}>
+  <div class:list={[{ 'after-hero': first }]}>
     {
       page.data.length === 0 ? (
         <p class="empty" id="posts">아직 올린 글이 없습니다.</p>
@@ -62,7 +61,7 @@ const title = first ? undefined : `${page.currentPage}쪽`;
   .after-hero .home-list {
     border-top: 0;
     margin-top: 0;
-    padding-top: clamp(3rem, 7vh, 5rem);
+    padding-top: 1rem;
   }
   .after-hero .empty,
   .after-hero .home-list {
