@@ -3,8 +3,9 @@ export const SITE = {
   name: 'bottari-KR',
   /** 헤더 왼쪽 홈 버튼 표기(사용자 지정) — name 은 title·footer·og 에 그대로 쓴다 */
   brand: '보따리',
-  /** 홈 버튼 앞 그림 — 사용자가 준 산타 사진(보따리 멘 산타)에서 배경을 지운 것. scripts/prepare-brand-santa.py */
-  brandMark: '/media/brand-santa.webp',
+  /** 홈 버튼 앞 그림 — 사용자가 준 산타 사진(큰 보따리 끄는 산타)에서 배경을 지운 것. scripts/prepare-brand-santa.py 가
+   *  내용 해시가 붙은 파일명을 출력한다 — 그림을 바꾸면 여기 경로도 바꾼다(같은 이름으로 덮으면 캐시 때문에 안 바뀌어 보인다) */
+  brandMark: '/media/brand-santa-d891fd81.webp',
   /** 홈 히어로 헤드라인(사용자 지정 문구) */
   tagline: 'Jun Bundle',
   /** 홈 히어로 원 둘레를 도는 문구(사용자 지정) */
