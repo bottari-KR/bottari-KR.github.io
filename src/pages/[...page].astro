@@ -7,7 +7,7 @@ import Pagination from '../components/Pagination.astro';
 import { SITE } from '../site';
 import { getPublishedPosts, postHref, type Post } from '../lib/posts';
 
-// 홈 = 히어로(문구 + 바구니 애니메이션) + 글 카드 목록. `/` 가 1쪽, `/2/` `/3/` … 이 다음 쪽(2쪽부터는 히어로 없이 목록만).
+// 홈 = 히어로(헤드라인) + 글 카드 목록. `/` 가 1쪽, `/2/` `/3/` … 이 다음 쪽(2쪽부터는 히어로 없이 목록만).
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getPublishedPosts();
   return paginate(posts, { pageSize: SITE.pageSize });

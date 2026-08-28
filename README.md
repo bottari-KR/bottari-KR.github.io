@@ -20,10 +20,6 @@ npm run dev               # 로컬 미리보기 (draft 도 보인다)
 
 ## 출처
 
-- 홈 히어로 일러스트(`src/components/Bucket.astro`) — 21st.dev 계열 "Bucket" React 컴포넌트(motion/react + shadcn)를
-  Astro 네이티브로 옮긴 것. SVG 마크업은 원본 그대로, 카드 낙하 애니메이션은 CSS 키프레임(React·Tailwind 없음).
-- 카드 아이콘(`src/components/icons.ts`) — [Hugeicons](https://hugeicons.com) Free, MIT(`@hugeicons/core-free-icons` 4.3.0)의
-  `SecurityCheck` · `Zap` · `UserStory` · `Sparkles` path 데이터를 인라인. 패키지는 빌드에 쓰지 않는다.
 - 서체(`public/fonts/pretendard/`) — [Pretendard](https://github.com/orioncactus/pretendard) Variable 1.3.9, SIL OFL 1.1
   (`LICENSE.txt` 동봉). npm `pretendard` 패키지의 `dist/web/variable/` 동적 서브셋(css + woff2)을 그대로 복사해 self-host.
   외부 CDN은 쓰지 않는다.
