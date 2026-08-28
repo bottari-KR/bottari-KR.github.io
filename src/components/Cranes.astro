@@ -1,13 +1,16 @@
 ---
-// 목록 페이지 패널(ListShell .panel) 위에 서 있는 두루미 넷 — 2026-08-28 사용자 요청
+// 목록 페이지 패널(ListShell .panel) 위에 서 있는 두루미 — 2026-08-28 사용자 요청
 // "카테고리·태그·아카이브·문의가 허전하다. 흰 박스 위에 조그맣게 4마리 정도 서 있는 느낌으로".
 // 사용자가 준 레퍼런스(Pinterest 핀, 먹선 라인아트 단정학 — 흰 몸 · 검은 날개깃 · 붉은 정수리 · 가는 먹선)는
 // 스타일만 빌렸다. 픽셀은 쓰지 않고 SVG 로 직접 그렸다(viewBox 100×128.5, 발끝이 아래 가장자리).
-// <defs> 하나에 다리(둘·외발) · 몸통 · 머리(자세 셋: 서서 보기 · 땅 쪼기 · 깃 다듬기)를 두고 <use> 로 조합한다.
-// 색은 global.css 의 --crane-* 토큰. 장식이라 aria-hidden, pointer-events 없음.
+// <defs> 하나에 다리(둘·외발) · 몸통 · 머리(자세 셋: 서서 보기 · 땅 쪼기 · 깃 다듬기) · 날개(위·아래) · 나는 몸을 두고
+// <use> 로 조합한다. 색은 global.css 의 --crane-* 토큰. 장식이라 aria-hidden.
 // 페이지마다 마릿수·자리·자세가 다르다 — 같은 날 사용자 요청: 카테고리 4(그대로) · 태그 3 · 아카이브 5 · 문의 2, 자리는 전부 다르게.
 // x 는 패널 왼쪽(side:'right' 면 오른쪽) 가장자리에서의 거리. 카테고리는 rem(왼쪽 셋 묶음, xm 은 좁은 화면용),
 // 나머지는 패널 폭의 % 라 좁은 화면에서도 서로 안 겹친다(두루미 폭 ≤ 3.3rem, 폰 패널 ≈ 22rem).
+// 마우스를 올리면(터치는 탭) 날개를 펴고 바라보는 쪽으로 날아갔다가 몇 초 뒤 반대쪽에서 돌아와 제자리에 앉는다 —
+// 같은 날 사용자 요청. 아래 <script> 가 WAAPI 로 translate/rotate 를 움직이고 data-state 로 자세(stand/land/fly)를 바꾼다.
+// prefers-reduced-motion 이면 날지 않는다.
 type Pose = 'alert' | 'forage' | 'preen' | 'oneleg';
 interface Crane {
   pose: Pose;
@@ -99,10 +102,55 @@ const cranes = FLOCKS[flock];
         <path class="c-ink" d="M 63.5 44 L 70 57 L 58.5 47.5 Z"></path>
         <circle class="c-ink" cx="59" cy="40" r="0.8"></circle>
       </g>
+      <!-- 날개: 어깨(46,58) 기준. up = 등 위로 펼침, down = 배 아래로 내림. 끝 1/3 은 검은 깃 -->
+      <g id="crane-wing-up">
+        <path class="c-fill" d="M 46 58 C 40 44 50 24 70 12 C 74 22 68 38 62 48 C 60 52 58 56 62 59 Z"></path>
+        <path class="c-ink" d="M 70 12 C 72 18 71 26 68 34 L 66 30 L 66 38 L 64 33 L 63 42 L 61 36 C 65 28 68 20 70 12 Z"></path>
+        <path class="c-line" d="M 50 50 C 56 38 62 28 68 18"></path>
+        <path class="c-line" d="M 54 54 C 58 44 62 36 66 26"></path>
+      </g>
+      <g id="crane-wing-down">
+        <path class="c-fill" d="M 46 60 C 40 74 50 96 70 112 C 74 102 68 86 62 74 C 60 70 58 66 62 62 Z"></path>
+        <path class="c-ink" d="M 70 112 C 72 106 71 98 68 90 L 66 94 L 66 86 L 64 91 L 63 82 L 61 88 C 65 96 68 104 70 112 Z"></path>
+        <path class="c-line" d="M 50 68 C 56 80 62 90 68 104"></path>
+        <path class="c-line" d="M 54 64 C 58 76 62 84 66 96"></path>
+      </g>
+      <!-- 나는 몸: 몸통 수평, 목 앞으로, 다리 뒤로 -->
+      <g id="crane-flybody">
+        <path class="c-leg" d="M 64 72 L 80 79 L 96 82"></path>
+        <path class="c-leg" d="M 60 73 L 78 82 L 94 86"></path>
+        <path class="c-fill" d="M 30 60 C 36 52 58 51 70 57 C 76 60 78 66 74 70 C 62 76 40 75 30 68 Z"></path>
+        <path class="c-ink" d="M 68 56 C 78 55 88 58 93 64 L 91 68 L 89 63 L 88 70 L 86 65 L 83 71 L 81 65 L 78 69 L 77 64 C 74 62 71 60 68 56 Z"></path>
+        <path class="c-body" d="M 31 66 C 24 64 16 60 10 57 L 15 51.5 C 20 52 26 55 32 58 L 34 62 Z"></path>
+        <path class="c-line" d="M 31 66 C 24 64 16 60 10 57"></path>
+        <path class="c-line" d="M 32 58 C 26 55 20 52 15 51.5"></path>
+        <path class="c-fill" d="M 9.5 57 C 11 58.8 14.5 58.8 16.5 57 C 18.5 55 18.3 51.5 16 50 C 13.5 48.6 10 49.4 9 52 Z"></path>
+        <path class="c-crown" d="M 9.2 51.8 C 11 49 14.5 48.8 16.3 50.5 C 14 50.2 11.5 50.6 9.2 51.8 Z"></path>
+        <path class="c-ink" d="M 9 52 L 1 55.5 L 9.5 57 Z"></path>
+        <circle class="c-ink" cx="12.5" cy="53.5" r="0.8"></circle>
+      </g>
       <symbol id="crane-alert" viewBox="0 0 100 128.5"><use href="#crane-legs-2"></use><use href="#crane-body"></use><use href="#crane-head-alert"></use></symbol>
       <symbol id="crane-forage" viewBox="0 0 100 128.5"><use href="#crane-legs-2"></use><use href="#crane-body"></use><use href="#crane-head-forage"></use></symbol>
       <symbol id="crane-preen" viewBox="0 0 100 128.5"><use href="#crane-legs-2"></use><use href="#crane-body"></use><use href="#crane-head-preen"></use></symbol>
       <symbol id="crane-oneleg" viewBox="0 0 100 128.5"><use href="#crane-legs-1"></use><use href="#crane-body"></use><use href="#crane-head-alert"></use></symbol>
+      <symbol id="crane-fly-up" viewBox="0 0 100 128.5">
+        <use href="#crane-wing-up" transform="translate(-7 3) scale(0.92)"></use>
+        <use href="#crane-flybody"></use>
+        <use href="#crane-wing-up"></use>
+      </symbol>
+      <symbol id="crane-fly-down" viewBox="0 0 100 128.5">
+        <use href="#crane-wing-down" transform="translate(-7 -3) scale(0.92)"></use>
+        <use href="#crane-flybody"></use>
+        <use href="#crane-wing-down"></use>
+      </symbol>
+      <!-- 이륙·착지: 선 자세에 날개만 위로 -->
+      <symbol id="crane-land" viewBox="0 0 100 128.5">
+        <use href="#crane-wing-up" transform="translate(-7 3) scale(0.92)"></use>
+        <use href="#crane-legs-2"></use>
+        <use href="#crane-body"></use>
+        <use href="#crane-head-alert"></use>
+        <use href="#crane-wing-up"></use>
+      </symbol>
     </defs>
   </svg>
 
@@ -111,12 +159,70 @@ const cranes = FLOCKS[flock];
       <svg
         class:list={['crane', { right: c.side === 'right', flip: c.flip }]}
         style={`--x:${c.x};--h:${c.h}${c.xm ? `;--xm:${c.xm}` : ''}`}
+        data-face={c.flip ? '1' : '-1'}
       >
-        <use href={`#crane-${c.pose}`} />
+        <use class="u-stand" href={`#crane-${c.pose}`} />
+        <use class="u-land" href="#crane-land" />
+        <use class="u-fly u-fly-up" href="#crane-fly-up" />
+        <use class="u-fly u-fly-down" href="#crane-fly-down" />
       </svg>
     ))
   }
 </div>
+
+<script>
+  // 두루미 비행: pointerenter → 이륙(날개 위) → 바라보는 쪽으로 날아감 → 잠시 사라짐 → 반대쪽 위에서 돌아와 착지.
+  // 자세는 data-state(land/fly), 이동은 WAAPI translate/rotate(.flip 은 scale 이라 합성된다 — transform 아님).
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  async function fly(el: SVGSVGElement) {
+    if (REDUCED || el.dataset.state) return;
+    const face = Number(el.dataset.face) || -1; // -1 = 왼쪽을 본다(기본), 1 = 오른쪽(거울)
+    el.dataset.state = 'land';
+    await wait(150);
+    el.dataset.state = 'fly';
+    const out = el.animate(
+      [
+        { translate: '0 0', rotate: '0deg' },
+        { translate: `${face * 14}vw -14vh`, rotate: `${face * 14}deg`, offset: 0.4 },
+        { translate: `${face * 60}vw -80vh`, rotate: `${face * 8}deg` },
+      ],
+      { duration: 1500, easing: 'cubic-bezier(0.45, 0, 0.85, 0.45)', fill: 'forwards' },
+    );
+    await out.finished;
+    el.style.visibility = 'hidden';
+    await wait(2400);
+    el.style.visibility = '';
+    const back = el.animate(
+      [
+        { translate: `${-face * 60}vw -70vh`, rotate: `${-face * 5}deg` },
+        { translate: `${-face * 14}vw -16vh`, rotate: `${-face * 7}deg`, offset: 0.7 },
+        { translate: '0 0', rotate: '0deg' },
+      ],
+      { duration: 1700, easing: 'cubic-bezier(0.2, 0.6, 0.3, 1)', fill: 'forwards' },
+    );
+    setTimeout(() => (el.dataset.state = 'land'), 1300);
+    await back.finished;
+    out.cancel();
+    back.cancel();
+    await wait(180);
+    // 커서가 아직 제자리 위에 있으면 착지하자마자 다시 뜨지 않게 — 커서가 떠난 뒤(pointerleave)에야 다음 비행
+    if (el.matches(':hover')) el.dataset.state = 'rest';
+    else delete el.dataset.state;
+  }
+
+  document.querySelectorAll<SVGSVGElement>('.flock .crane').forEach((el) => {
+    el.addEventListener('pointerenter', () => void fly(el), { passive: true });
+    el.addEventListener(
+      'pointerleave',
+      () => {
+        if (el.dataset.state === 'rest') delete el.dataset.state;
+      },
+      { passive: true },
+    );
+  });
+</script>
 
 <style>
   .flock {
@@ -140,13 +246,43 @@ const cranes = FLOCKS[flock];
     width: auto;
     aspect-ratio: 100 / 128.5;
     overflow: visible;
+    pointer-events: auto;
   }
   .crane.right {
     left: auto;
     right: var(--x);
   }
   .crane.flip {
-    transform: scaleX(-1);
+    scale: -1 1;
+  }
+
+  /* 자세 전환 — 기본은 서 있는 그림만 */
+  .u-land,
+  .u-fly {
+    display: none;
+  }
+  .crane[data-state='land'] .u-stand,
+  .crane[data-state='fly'] .u-stand {
+    display: none;
+  }
+  .crane[data-state='land'] .u-land {
+    display: inline;
+  }
+  .crane[data-state='fly'] .u-fly {
+    display: inline;
+    animation: flap 280ms steps(1, end) infinite;
+  }
+  .crane[data-state='fly'] .u-fly-down {
+    animation-delay: -140ms;
+  }
+  @keyframes flap {
+    0% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
   }
 
   /* 먹선 라인아트 — 선 굵기는 화면 px 고정(non-scaling-stroke). viewBox 단위로 두면 4rem 높이에서 0.5px 가 되어
