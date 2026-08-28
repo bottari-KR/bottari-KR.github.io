@@ -2,6 +2,9 @@
 // 목록 페이지 공통 틀(카테고리·태그·아카이브·문의와 그 하위 페이지) — 2026-08-28 사용자 결정:
 // 구조는 ruby-kim.github.io(가운데 제목 띠 + 그 아래 흰 패널), 생김새는 홈과 같은 종이(--hero-*) + 그레인 + 산호색 원.
 // Layout 은 hero={true} 로 불러 헤더가 띠 위에 얹히고 main 에 wrap 이 없다 — 패널이 스스로 폭을 잡는다.
+// 패널 위 가장자리에는 두루미 넷(Cranes.astro)이 서 있다 — 2026-08-28 "허전하다" 피드백.
+import Cranes from './Cranes.astro';
+
 interface Props {
   title: string;
   /** 제목 아래 한 줄 — "3개 분류", "12편" 등 */
@@ -26,6 +29,7 @@ const { title, sub, width = 'wide' } = Astro.props;
   </header>
 
   <div class:list={['panel', width]}>
+    <Cranes />
     <slot />
   </div>
 </div>

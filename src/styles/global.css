@@ -27,6 +27,10 @@
   /* 목록 페이지의 종이 위 패널(ListShell) */
   --panel-bg: #ffffff;
   --panel-rule: #e2e2e0;
+  /* 패널 위 두루미(Cranes.astro) — 먹선 라인아트: 흰 몸 · 먹선 · 붉은 정수리 */
+  --crane-body: #ffffff;
+  --crane-ink: #262624;
+  --crane-crown: #c8372d;
 
   /* 서체 — 2026-08-28 사용자 요청 "모던하게": 제목·본문 모두 Pretendard Variable(OFL, self-host,
      /fonts/pretendard/ 동적 서브셋 — Layout.astro head 의 <link> 가 로드). 로드 전·실패 시 시스템 산세리프.
@@ -80,6 +84,9 @@
     --hero-grain-opacity: 0.08;
     --panel-bg: #1b1c1e;
     --panel-rule: #2e2f31;
+    --crane-body: #1b1c1e; /* 어두운 종이 위 선화 — 몸은 패널색, 선은 밝게 */
+    --crane-ink: #d9d9d6;
+    --crane-crown: #e0524a;
   }
 }
 
