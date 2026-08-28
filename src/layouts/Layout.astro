@@ -6,9 +6,11 @@ interface Props {
   title?: string;
   description?: string;
   ogType?: 'website' | 'article';
+  /** 첫 화면이 히어로(사진·영상)면 헤더를 그 위에 흰색으로 얹는다 */
+  hero?: boolean;
 }
 
-const { title, description = SITE.description, ogType = 'website' } = Astro.props;
+const { title, description = SITE.description, ogType = 'website', hero = false } = Astro.props;
 const fullTitle = title ? `${title} · ${SITE.name}` : SITE.name;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.pathname;
 const path = Astro.url.pathname;
@@ -43,9 +45,9 @@ function isCurrent(href: string) {
     <meta property="og:locale" content="ko_KR" />
     <meta name="twitter:card" content="summary" />
   </head>
-  <body>
+  <body class:list={[{ 'has-hero': hero }]}>
     <a class="skip" href="#main">본문으로 건너뛰기</a>
-    <header class="site-header wrap">
+    <header class:list={['site-header', 'wrap', { overlay: hero }]}>
       <a class="brand" href="/" aria-label={`${SITE.name} 홈`}>{SITE.name}<span class="dot">.</span></a>
       <nav aria-label="주 메뉴">
         <ul>
@@ -67,7 +69,7 @@ function isCurrent(href: string) {
       </nav>
     </header>
 
-    <main id="main" class="wrap">
+    <main id="main" class:list={[{ wrap: !hero }]}>
       <slot />
     </main>
 
@@ -141,9 +143,62 @@ function isCurrent(href: string) {
     margin-left: 0.15em;
   }
 
+  /* 좁은 화면 — 브랜드 한 줄, 메뉴는 그 아래 줄에서 감싼다 */
+  @media (max-width: 40rem) {
+    .site-header {
+      gap: 0.5rem 1rem;
+      padding-top: 1.25rem;
+    }
+    nav {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+    nav ul {
+      gap: 0.25rem 1rem;
+    }
+  }
+
+  /* 히어로 위에 얹힌 헤더 — 흰 글자, 배경·경계선 없음. 히어로 문구와 같은 왼쪽 선(--hero-inset) */
+  .site-header.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    color: #fff;
+    max-width: none;
+    padding-inline: var(--hero-inset);
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.5);
+  }
+  .site-header.overlay .brand,
+  .site-header.overlay nav ul,
+  .site-header.overlay nav a[aria-current='page'] {
+    color: #fff;
+  }
+  .site-header.overlay .brand:hover {
+    color: #fff;
+  }
+  .site-header.overlay .dot {
+    color: #fff;
+    opacity: 0.7;
+  }
+  .site-header.overlay nav a:hover {
+    color: #fff;
+    text-decoration-color: rgb(255 255 255 / 0.7);
+  }
+  .site-header.overlay nav a[aria-current='page'] {
+    text-decoration-color: #fff;
+  }
+  .site-header.overlay :focus-visible {
+    outline-color: #fff;
+  }
+
   main {
     min-height: 60vh;
     padding-bottom: 5rem;
+  }
+  .has-hero main {
+    position: relative;
   }
 
   .site-footer {
