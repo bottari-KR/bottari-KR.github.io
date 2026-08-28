@@ -1,20 +1,236 @@
 ---
+// 소개 — 2026-08-28 사용자 지정 레퍼런스(Behance 122104365 둘째 장) 구성: 왼쪽 큰 대문자 헤드라인 + 소개 문단,
+// 오른쪽 이력 목록(NAME/BIRTH/EDUCATION/…), 왼쪽 아래 귀퉁이에 산호색 원. 홈 히어로와 같은 종이(--hero-*) 위에 그린다.
+// 내용은 src/data/profile.ts 에서만 고친다 — 지금은 전부 임시 자리표시.
 import Layout from '../layouts/Layout.astro';
 import { SITE } from '../site';
-// 본문은 사용자가 정한다 — 에이전트가 지어내지 않는다. 확정된 문장을 받으면 아래 <section> 에 넣는다.
+import { PROFILE, ABOUT_HEADLINE, ABOUT_LEDE } from '../data/profile';
+
+const sections = [
+  { key: 'education', label: 'Education', rows: PROFILE.education },
+  { key: 'experience', label: 'Experience', rows: PROFILE.experience },
+] as const;
 ---
 
-<Layout title="소개" description={`${SITE.name} 소개`}>
-  <header class="page-head">
-    <h1>소개</h1>
-  </header>
-  <section class="prose">
-    <p>소개 글을 준비하고 있습니다.</p>
+<Layout title="소개" description={`${SITE.name} 소개`} hero>
+  <section class="about grain" aria-labelledby="about-title">
+    <picture class="blob-wrap">
+      <source srcset="/media/hero-blob-dark.webp" media="(prefers-color-scheme: dark)" />
+      <img class="blob" src="/media/hero-blob.webp" alt="" width="1200" height="1200" decoding="async" />
+    </picture>
+
+    <div class="cols">
+      <div class="intro">
+        <h1 id="about-title">
+          {ABOUT_HEADLINE.map((line, i) => (
+            <>
+              {i > 0 && ' '}
+              <span class="line">{line}</span>
+            </>
+          ))}
+        </h1>
+        <p class="lede">{ABOUT_LEDE}</p>
+      </div>
+
+      <dl class="facts">
+        <div class="fact">
+          <dt>Name</dt>
+          <dd>{PROFILE.name}</dd>
+        </div>
+        <div class="fact">
+          <dt>Birth</dt>
+          <dd>{PROFILE.birth}</dd>
+        </div>
+        {
+          sections.map(
+            (s) =>
+              s.rows.length > 0 && (
+                <div class="fact">
+                  <dt>{s.label}</dt>
+                  <dd>
+                    <ul class="rows">
+                      {s.rows.map((r) => (
+                        <li>
+                          <span class="year">{r.year}</span>
+                          <span>{r.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              ),
+          )
+        }
+        {
+          PROFILE.certification.length > 0 && (
+            <div class="fact">
+              <dt>Certification</dt>
+              <dd>
+                <ul class="dots">
+                  {PROFILE.certification.map((c) => (
+                    <li>{c}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          )
+        }
+        {
+          PROFILE.skills.length > 0 && (
+            <div class="fact">
+              <dt>Skills</dt>
+              <dd>
+                <ul class="chips">
+                  {PROFILE.skills.map((s) => (
+                    <li>{s}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          )
+        }
+      </dl>
+    </div>
   </section>
 </Layout>
 
 <style>
-  section {
-    padding-top: 2rem;
+  .about {
+    container-type: inline-size;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 100svh;
+    background: var(--hero-bg);
+    color: var(--hero-fg);
+    /* 위는 얹힌 헤더(≈5rem) 아래에서 시작 */
+    padding: clamp(7rem, 16vh, 9.5rem) var(--hero-inset) clamp(5rem, 12vh, 8rem);
+  }
+
+  /* 왼쪽 아래 귀퉁이 원 — 레퍼런스처럼 4분의 1쯤만 보인다. 이미지 안 원은 한 변의 약 72% */
+  .blob-wrap {
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    bottom: 0;
+    width: min(64cqw, 56rem);
+    aspect-ratio: 1;
+    translate: -32% 38%;
+    pointer-events: none;
+  }
+  .blob {
+    width: 100%;
+    height: auto;
+    max-width: none;
+    user-select: none;
+  }
+
+  .cols {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 4rem clamp(3rem, 8cqw, 8rem);
+    align-items: start;
+  }
+
+  h1 {
+    font-size: clamp(2.75rem, 6.4cqw, 6rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+    text-transform: uppercase; /* 레퍼런스는 전부 대문자. 원문(profile.ts)은 그대로 */
+    text-wrap: initial;
+  }
+  .line {
+    display: block;
+  }
+  .lede {
+    margin-top: 1.75rem;
+    max-width: 34rem;
+    font-size: var(--text-base);
+    line-height: 1.8;
+    color: var(--hero-fg);
+  }
+
+  .facts {
+    margin: 0;
+    display: grid;
+    gap: 2.25rem;
+    padding-top: 0.5rem;
+  }
+  .fact {
+    display: grid;
+    gap: 0.75rem;
+  }
+  dt {
+    display: inline-block;
+    justify-self: start;
+    font-size: var(--text-lg);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    padding-bottom: 0.2rem;
+    border-bottom: 1.5px solid var(--hero-fg);
+  }
+  dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+
+  .rows,
+  .dots,
+  .chips {
+    list-style: none;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .rows li {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    gap: 0.75rem;
+  }
+  .year {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .dots li::before {
+    content: '•';
+    margin-right: 0.6em;
+  }
+  .chips {
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    display: flex;
+  }
+  .chips li {
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    background: var(--hero-fg);
+    color: var(--hero-bg);
+    font-weight: 600;
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 52rem) {
+    .cols {
+      grid-template-columns: 1fr;
+      gap: 3.5rem;
+    }
+    .about {
+      padding-top: clamp(9rem, 20vh, 11rem);
+    }
+    .blob-wrap {
+      width: min(110cqw, 36rem);
+      translate: -40% 45%;
+    }
+    h1 {
+      font-size: clamp(2.75rem, 14cqw, 5rem);
+    }
   }
 </style>

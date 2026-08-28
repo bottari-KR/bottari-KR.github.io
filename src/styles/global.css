@@ -175,6 +175,23 @@ ol {
   padding: 0;
 }
 
+/* ---- 종이 그레인 — 홈 히어로·소개 페이지의 --hero-bg 위에 뿌리는 노이즈 ---- */
+/* 240px 타일 SVG 노이즈. 밝은 배경엔 multiply 로 어둡게, 어두운 배경엔 screen 으로 밝게(토큰 --hero-grain-*) */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: var(--hero-grain-blend);
+  opacity: var(--hero-grain-opacity);
+}
+
 /* ---- 공통 레이아웃 ---- */
 .wrap {
   max-width: var(--page-max);
