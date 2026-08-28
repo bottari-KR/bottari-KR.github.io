@@ -1,8 +1,8 @@
 /* ---------------------------------------------------------------------------
-   bottari-KR — 디자인 토큰 (4차, 2026-08-28)
+   bottari-KR — 디자인 토큰 (5차, 2026-08-28)
    타이포그래피 중심 미니멀: 큰 산세리프 제목(Pretendard 700) · 넓은 여백 · 무채색 + 포인트 색 하나(쪽빛).
-   홈 첫 화면은 헤드라인 "Jun bundle"만 — 그림·애니메이션 없음.
-   외부 폰트 CDN 없음 — 시스템 서체 스택만 쓴다.
+   홈 첫 화면(히어로)은 별도 토큰(--hero-*): 밝은 회색 그레인 배경 + 산호색 원 + 헤드라인 "Jun Bundle".
+   외부 폰트 CDN 없음 — Pretendard self-host + 시스템 서체 스택.
    --------------------------------------------------------------------------- */
 
 :root {
@@ -16,6 +16,14 @@
   /* 포인트 하나 — 쪽빛(indigo). 히어로 일러스트의 남색 그림자와 같은 계열. 흰 배경 8.6:1 */
   --accent: #27418c;
   --accent-ink: #ffffff;
+
+  /* 홈 히어로 전용 — 레퍼런스(Behance 122104365 첫 장) 근사값. 그 위에 얹히는 헤더(Layout .overlay)도 이 색을 쓴다 */
+  --hero-bg: #efefef;
+  --hero-fg: #2b2b29; /* #efefef 위 12.5:1 */
+  --hero-fg-muted: #5f5f5c; /* #efefef 위 5.6:1 */
+  --hero-blob: #f26654;
+  --hero-grain-blend: multiply;
+  --hero-grain-opacity: 0.17;
 
   /* 서체 — 2026-08-28 사용자 요청 "모던하게": 제목·본문 모두 Pretendard Variable(OFL, self-host,
      /fonts/pretendard/ 동적 서브셋 — Layout.astro head 의 <link> 가 로드). 로드 전·실패 시 시스템 산세리프.
@@ -60,6 +68,13 @@
     --surface: #1b1c1e;
     --accent: #9db0f2; /* #121314 위 9.6:1 */
     --accent-ink: #121314;
+
+    --hero-bg: #151516;
+    --hero-fg: #ececea;
+    --hero-fg-muted: #a6a6a2;
+    --hero-blob: #e85d4b;
+    --hero-grain-blend: screen;
+    --hero-grain-opacity: 0.07;
   }
 }
 

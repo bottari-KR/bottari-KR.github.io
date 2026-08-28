@@ -22,10 +22,11 @@ const first = page.currentPage === 1;
 const title = first ? undefined : `${page.currentPage}쪽`;
 ---
 
-<Layout title={title}>
+<Layout title={title} hero={first}>
   {first ? <Hero /> : <h1 class="sr-only">{SITE.description}</h1>}
 
-  <div class:list={[{ 'after-hero': first }]}>
+  {/* 1쪽은 히어로가 전폭이라 main 에 wrap 이 없다 — 목록만 여기서 감싼다 */}
+  <div class:list={[{ 'after-hero': first, wrap: first }]}>
     {
       page.data.length === 0 ? (
         <p class="empty" id="posts">아직 올린 글이 없습니다.</p>

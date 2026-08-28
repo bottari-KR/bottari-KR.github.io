@@ -6,7 +6,7 @@ interface Props {
   title?: string;
   description?: string;
   ogType?: 'website' | 'article';
-  /** 첫 화면이 히어로(사진·영상)면 헤더를 그 위에 흰색으로 얹는다 */
+  /** 첫 화면이 전폭 히어로면 헤더를 그 위에 얹는다(색은 --hero-fg, main 은 wrap 없이 — 페이지가 직접 감싼다) */
   hero?: boolean;
 }
 
@@ -160,39 +160,40 @@ function isCurrent(href: string) {
     }
   }
 
-  /* 히어로 위에 얹힌 헤더 — 흰 글자, 배경·경계선 없음. 히어로 문구와 같은 왼쪽 선(--hero-inset) */
+  /* 히어로 위에 얹힌 헤더 — 히어로 토큰 색, 배경·경계선 없음. 히어로 문구와 같은 왼쪽 선(--hero-inset).
+     레퍼런스 첫 장의 맨 윗줄(작은 글자 한 줄)에 해당한다 */
   .site-header.overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 2;
-    color: #fff;
+    z-index: 5;
+    color: var(--hero-fg);
     max-width: none;
     padding-inline: var(--hero-inset);
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.5);
   }
   .site-header.overlay .brand,
-  .site-header.overlay nav ul,
   .site-header.overlay nav a[aria-current='page'] {
-    color: #fff;
+    color: var(--hero-fg);
+  }
+  .site-header.overlay nav ul {
+    color: var(--hero-fg-muted);
   }
   .site-header.overlay .brand:hover {
-    color: #fff;
+    color: var(--hero-fg);
   }
   .site-header.overlay .dot {
-    color: #fff;
-    opacity: 0.7;
+    color: var(--hero-blob);
   }
   .site-header.overlay nav a:hover {
-    color: #fff;
-    text-decoration-color: rgb(255 255 255 / 0.7);
+    color: var(--hero-fg);
+    text-decoration-color: var(--hero-blob);
   }
   .site-header.overlay nav a[aria-current='page'] {
-    text-decoration-color: #fff;
+    text-decoration-color: var(--hero-blob);
   }
   .site-header.overlay :focus-visible {
-    outline-color: #fff;
+    outline-color: var(--hero-fg);
   }
 
   main {

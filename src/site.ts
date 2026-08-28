@@ -2,7 +2,7 @@
 export const SITE = {
   name: 'bottari-KR',
   /** 홈 히어로 헤드라인(사용자 지정 문구) */
-  tagline: 'Jun bundle',
+  tagline: 'Jun Bundle',
   /** 검색·공유용 설명(meta description) */
   description: 'bottari-KR의 개발 기록',
   github: 'https://github.com/bottari-KR',
