@@ -5,6 +5,49 @@
 // 스타일만 빌렸다. 픽셀은 쓰지 않고 SVG 로 직접 그렸다(viewBox 100×128.5, 발끝이 아래 가장자리).
 // <defs> 하나에 다리(둘·외발) · 몸통 · 머리(자세 셋: 서서 보기 · 땅 쪼기 · 깃 다듬기)를 두고 <use> 로 조합한다.
 // 색은 global.css 의 --crane-* 토큰. 장식이라 aria-hidden, pointer-events 없음.
+// 페이지마다 마릿수·자리·자세가 다르다 — 같은 날 사용자 요청: 카테고리 4(그대로) · 태그 3 · 아카이브 5 · 문의 2, 자리는 전부 다르게.
+// x 는 패널 왼쪽(side:'right' 면 오른쪽) 가장자리에서의 거리. 카테고리는 rem(왼쪽 셋 묶음, xm 은 좁은 화면용),
+// 나머지는 패널 폭의 % 라 좁은 화면에서도 서로 안 겹친다(두루미 폭 ≤ 3.3rem, 폰 패널 ≈ 22rem).
+type Pose = 'alert' | 'forage' | 'preen' | 'oneleg';
+interface Crane {
+  pose: Pose;
+  x: string;
+  xm?: string;
+  side?: 'right';
+  h: number;
+  flip?: boolean;
+}
+const FLOCKS: Record<'categories' | 'tags' | 'archive' | 'contact', Crane[]> = {
+  categories: [
+    { pose: 'forage', x: '1.25rem', h: 0.86 },
+    { pose: 'alert', x: '4.75rem', h: 1 },
+    { pose: 'preen', x: '8.5rem', xm: '7.75rem', h: 0.92 },
+    { pose: 'oneleg', x: '2rem', side: 'right', h: 1.04, flip: true },
+  ],
+  tags: [
+    { pose: 'preen', x: '9%', h: 0.94 },
+    { pose: 'oneleg', x: '41%', h: 1.02, flip: true },
+    { pose: 'forage', x: '13%', side: 'right', h: 0.88 },
+  ],
+  archive: [
+    { pose: 'alert', x: '3%', h: 1 },
+    { pose: 'forage', x: '18%', h: 0.86, flip: true },
+    { pose: 'preen', x: '46%', h: 0.92 },
+    { pose: 'oneleg', x: '24%', side: 'right', h: 1.04, flip: true },
+    { pose: 'alert', x: '5%', side: 'right', h: 0.9 },
+  ],
+  contact: [
+    { pose: 'oneleg', x: '14%', h: 1 },
+    { pose: 'preen', x: '10%', side: 'right', h: 0.9, flip: true },
+  ],
+};
+
+interface Props {
+  flock?: keyof typeof FLOCKS;
+}
+
+const { flock = 'categories' } = Astro.props;
+const cranes = FLOCKS[flock];
 ---
 
 <div class="flock" aria-hidden="true">
@@ -63,11 +106,16 @@
     </defs>
   </svg>
 
-  <!-- 왼쪽에 셋(쪼기 · 서기 · 깃 다듬기), 오른쪽 끝에 외발로 선 하나(거울) -->
-  <svg class="crane" style="left: 1.25rem; --h: 0.86"><use href="#crane-forage"></use></svg>
-  <svg class="crane" style="left: 4.75rem; --h: 1"><use href="#crane-alert"></use></svg>
-  <svg class="crane" style="left: 8.5rem; --h: 0.92"><use href="#crane-preen"></use></svg>
-  <svg class="crane flip" style="right: 2rem; --h: 1.04"><use href="#crane-oneleg"></use></svg>
+  {
+    cranes.map((c) => (
+      <svg
+        class:list={['crane', { right: c.side === 'right', flip: c.flip }]}
+        style={`--x:${c.x};--h:${c.h}${c.xm ? `;--xm:${c.xm}` : ''}`}
+      >
+        <use href={`#crane-${c.pose}`} />
+      </svg>
+    ))
+  }
 </div>
 
 <style>
@@ -87,10 +135,15 @@
   .crane {
     position: absolute;
     bottom: 0;
+    left: var(--x);
     height: calc(var(--crane-size) * var(--h, 1));
     width: auto;
     aspect-ratio: 100 / 128.5;
     overflow: visible;
+  }
+  .crane.right {
+    left: auto;
+    right: var(--x);
   }
   .crane.flip {
     transform: scaleX(-1);
@@ -146,8 +199,12 @@
   }
 
   @media (max-width: 40rem) {
-    .crane:nth-of-type(3) {
-      left: 7.75rem;
+    .crane {
+      left: var(--xm, var(--x));
+    }
+    .crane.right {
+      left: auto;
+      right: var(--xm, var(--x));
     }
   }
 </style>

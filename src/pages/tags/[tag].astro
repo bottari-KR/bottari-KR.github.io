@@ -22,7 +22,7 @@ const { tag, posts } = Astro.props;
 ---
 
 <Layout title={`#${tag}`} description={`${tag} 태그가 붙은 글`} hero>
-  <ListShell title={`#${tag}`} sub={`태그 · ${posts.length}편`}>
+  <ListShell title={`#${tag}`} sub={`태그 · ${posts.length}편`} flock="tags">
     <p class="crumb"><a href="/tags/">← 태그 전체</a></p>
     <section aria-label={`${tag} 글 목록`}>
       {

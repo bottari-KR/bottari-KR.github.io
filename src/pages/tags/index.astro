@@ -13,7 +13,7 @@ const tags = countTags(posts).map(({ name, count }) => ({
 ---
 
 <Layout title="태그" description="태그별 글 목록" hero>
-  <ListShell title="태그" sub={`${tags.length}개 태그`}>
+  <ListShell title="태그" sub={`${tags.length}개 태그`} flock="tags">
     {
       tags.length === 0 ? (
         <p class="empty">아직 태그가 없습니다.</p>

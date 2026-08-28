@@ -21,7 +21,7 @@ const mmdd = (d: Date) => d.toISOString().slice(5, 10).replace('-', '.');
 ---
 
 <Layout title="아카이브" description="연도별 전체 글 목록" hero>
-  <ListShell title="아카이브" sub={`${posts.length}개의 글`}>
+  <ListShell title="아카이브" sub={`${posts.length}개의 글`} flock="archive">
     {
       years.length === 0 ? (
         <p class="empty">아직 올린 글이 없습니다.</p>

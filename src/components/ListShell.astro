@@ -11,9 +11,11 @@ interface Props {
   sub?: string;
   /** 패널 최대 폭. 기본 72rem(아카이브·태그 격자), narrow 는 60rem(문의) */
   width?: 'wide' | 'narrow';
+  /** 패널 위 두루미 무리 — 마릿수·자리는 Cranes.astro 의 FLOCKS. 기본 categories(4) */
+  flock?: 'categories' | 'tags' | 'archive' | 'contact';
 }
 
-const { title, sub, width = 'wide' } = Astro.props;
+const { title, sub, width = 'wide', flock = 'categories' } = Astro.props;
 ---
 
 <div class="shell grain">
@@ -29,7 +31,7 @@ const { title, sub, width = 'wide' } = Astro.props;
   </header>
 
   <div class:list={['panel', width]}>
-    <Cranes />
+    <Cranes flock={flock} />
     <slot />
   </div>
 </div>
