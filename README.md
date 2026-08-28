@@ -24,5 +24,6 @@ npm run dev               # 로컬 미리보기 (draft 도 보인다)
   (`LICENSE.txt` 동봉). npm `pretendard` 패키지의 `dist/web/variable/` 동적 서브셋(css + woff2)을 그대로 복사해 self-host.
   외부 CDN은 쓰지 않는다.
 - 홈 히어로 구성(`src/components/Hero.astro`) — Behance [2022 포트폴리오 / 2022 portfolio](https://www.behance.net/gallery/122104365/2022-2022-portfolio)
-  첫 장의 구성(회색 그레인 배경 · 산호색 그러데이션 원 · 곡선 문구 · 좌하단 대형 헤드라인)을 참고해 CSS·SVG로 새로 그렸다.
-  원본 이미지는 쓰지 않는다.
+  첫 장의 구성(회색 그레인 배경 · 산호색 그러데이션 원 · 곡선 문구 · 좌하단 대형 헤드라인)을 참고해 새로 그렸다.
+  원본 이미지는 쓰지 않는다 — 원(`public/media/hero-blob.webp`, 1200px 투명 WebP)은 `scripts/render-hero-blob.py`가
+  실측 수치(타원 비율·기울기·방향별 번짐·색·노이즈)로 렌더한 것이고, 배경 그레인은 인라인 SVG, 곡선 문구는 SVG textPath.

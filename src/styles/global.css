@@ -23,7 +23,7 @@
   --hero-fg-muted: #5f5f5c; /* #efefef 위 5.6:1 */
   --hero-blob: #f26a62; /* 레퍼런스 원 속 실측 평균 */
   --hero-grain-blend: multiply;
-  --hero-grain-opacity: 0.26;
+  --hero-grain-opacity: 0.18; /* 원 이미지에 그레인이 이미 있어 배경용은 약하게 */
 
   /* 서체 — 2026-08-28 사용자 요청 "모던하게": 제목·본문 모두 Pretendard Variable(OFL, self-host,
      /fonts/pretendard/ 동적 서브셋 — Layout.astro head 의 <link> 가 로드). 로드 전·실패 시 시스템 산세리프.

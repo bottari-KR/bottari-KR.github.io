@@ -18,7 +18,18 @@ const lines = title.split(' ');
 ---
 
 <section class="hero" aria-label="소개">
-  <div class="blob" aria-hidden="true"></div>
+  <picture>
+    <source srcset="/media/hero-blob-dark.webp" media="(prefers-color-scheme: dark)" />
+    <img
+      class="blob"
+      src="/media/hero-blob.webp"
+      alt=""
+      width="1200"
+      height="1200"
+      decoding="async"
+      fetchpriority="high"
+    />
+  </picture>
   <svg class="arc" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
     <path id="hero-arc" d="M 50 4 A 46 46 0 1 1 49.99 4" fill="none"></path>
     <text>
@@ -50,9 +61,10 @@ const lines = title.split(' ');
     isolation: isolate;
     background: var(--hero-bg);
     color: var(--hero-fg);
-    --blob: min(66cqh, 58cqw);
-    --blob-x: 50%;
-    --blob-y: 57%;
+    /* --blob = 원 이미지 요소의 한 변. 이미지 안에서 보이는 원은 한 변의 약 72%(scripts/render-hero-blob.py 출력) */
+    --blob: min(92cqh, 80cqw);
+    --blob-x: 47%;
+    --blob-y: 58%;
   }
 
   /* 종이 그레인 — 240px 타일 SVG 노이즈. 밝은 배경엔 multiply 로 어둡게, 어두운 배경엔 screen 으로 밝게 뿌린다 */
@@ -74,21 +86,13 @@ const lines = title.split(' ');
     left: var(--blob-x);
     top: var(--blob-y);
     width: var(--blob);
-    aspect-ratio: 1;
+    height: auto;
+    max-width: none;
     translate: -50% -50%;
-    border-radius: 50%;
-    /* 레퍼런스 실측(가로 단면): 왼쪽은 지름의 12% 안에서 배경→본색, 오른쪽 위는 지름의 35%에 걸쳐 길게 번진다.
-       속은 거의 단색. 그래서 중심을 왼쪽 아래로 밀고(farthest-side = 오른쪽 위까지가 반지름) 58%까지 단색,
-       왼쪽·아래는 원 클립 선에서 끊긴다. 블러는 클립 선 계단만 지울 정도 — 흐릿한 구름이 아니라 종이에 찍힌 원. */
-    background: radial-gradient(
-      circle farthest-side at 35% 58%,
-      var(--hero-blob) 0 56%,
-      color-mix(in srgb, var(--hero-blob) 90%, var(--hero-bg)) 66%,
-      color-mix(in srgb, var(--hero-blob) 55%, var(--hero-bg)) 80%,
-      color-mix(in srgb, var(--hero-blob) 18%, var(--hero-bg)) 92%,
-      var(--hero-bg) 100%
-    );
-    filter: blur(1px);
+    pointer-events: none;
+    user-select: none;
+    /* 원 자체는 미리 렌더한 WebP(투명 배경, 그레인·비대칭 번짐 포함) — CSS gradient 로는 레퍼런스의 알갱이
+       번짐이 안 나와서 사용자가 "흐릿하다"고 두 번 기각했다. 재생성은 scripts/render-hero-blob.py */
   }
 
   .arc {
@@ -96,15 +100,16 @@ const lines = title.split(' ');
     z-index: 2;
     left: var(--blob-x);
     top: var(--blob-y);
-    width: calc(var(--blob) * 1.34);
+    width: calc(var(--blob) * 1.1);
     height: auto;
     translate: -50% -50%;
     overflow: visible;
     fill: var(--hero-fg);
     font-family: var(--font-display);
-    font-size: 3.1px; /* viewBox 단위 — 컨테이너와 같이 커진다 */
+    font-size: 2.9px; /* viewBox 단위 — 컨테이너와 같이 커진다 */
     font-weight: 500;
-    letter-spacing: 0.35px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
   }
 
   .content {
@@ -120,6 +125,7 @@ const lines = title.split(' ');
     font-weight: 800;
     letter-spacing: -0.045em;
     line-height: 0.92;
+    text-transform: uppercase; /* 레퍼런스는 전부 대문자. 원문(SITE.tagline)은 그대로 두고 표시만 */
     text-wrap: initial;
   }
   .line {
@@ -147,12 +153,12 @@ const lines = title.split(' ');
   @media (max-width: 40rem) {
     .hero {
       height: clamp(30rem, 100svh, 46rem);
-      --blob: min(52cqh, 82cqw);
+      --blob: min(72cqh, 118cqw);
       --blob-y: 50%;
-      --blob-x: 55%;
+      --blob-x: 52%;
     }
     .arc {
-      font-size: 3.6px;
+      font-size: 3.3px;
     }
     h1 {
       font-size: clamp(3.25rem, 18cqw, 5.5rem);
