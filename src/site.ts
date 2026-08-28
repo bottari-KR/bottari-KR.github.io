@@ -27,6 +27,6 @@ export const NAV = [
   { href: '/tags/', label: '태그', icon: 'tag' },
   { href: '/archive/', label: '아카이브', icon: 'archive' },
   { href: '/about/', label: '소개', icon: 'user' },
-  { href: '/contact/', label: '연락', icon: 'mail' },
+  { href: '/contact/', label: '문의', icon: 'inquiry' },
 ] as const;
 export type NavIconName = (typeof NAV)[number]['icon'] | 'github';
