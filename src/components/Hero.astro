@@ -17,7 +17,7 @@ const PLACEHOLDER_CHIPS: Chip[] = [
   { title: 'Modern Design', description: 'Crafted for high-end feel', icon: 'sparkles' },
 ];
 
-const { title = SITE.description, cta = { href: '#posts', label: '글 보기' }, chips = PLACEHOLDER_CHIPS } = Astro.props;
+const { title = SITE.tagline, cta = { href: '#posts', label: '글 보기' }, chips = PLACEHOLDER_CHIPS } = Astro.props;
 ---
 
 <section class="hero" aria-label="소개">
@@ -41,7 +41,10 @@ const { title = SITE.description, cta = { href: '#posts', label: '글 보기' },
     padding-block: 2.5rem 3rem;
   }
   .copy h1 {
-    font-size: var(--text-2xl);
+    font-size: clamp(2.75rem, 1.5rem + 4vw, 4.25rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
   }
   .actions {
     margin-top: 1.25rem;
@@ -62,9 +65,13 @@ const { title = SITE.description, cta = { href: '#posts', label: '글 보기' },
 
   @media (min-width: 64rem) {
     .hero {
-      /* 문구 : 일러스트 ≈ 46 : 54 — 60rem 컬럼 안에서 제목이 두세 줄로 떨어지게 */
+      /* 문구 : 일러스트 ≈ 46 : 54 */
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
       padding-block: 3rem 4rem;
+    }
+    .art {
+      /* 카드가 위에서 들어오는 구간이 헤더와 겹치지 않게 */
+      padding-top: 4rem;
     }
   }
 </style>

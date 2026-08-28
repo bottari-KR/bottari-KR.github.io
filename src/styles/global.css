@@ -17,13 +17,12 @@
   --accent: #27418c;
   --accent-ink: #ffffff;
 
-  /* 서체 */
-  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Noto Serif KR",
-    "Apple Myungjo", "Nanum Myeongjo", Batang, "바탕", Georgia, serif;
-  /* 라틴 서체를 한글 서체 앞에 둔다 — 글리프 단위 폴백이라 한글은 뒤의 한글 서체로 떨어진다.
-     Malgun Gothic 을 앞에 두면 Windows 에서 영문·숫자까지 Malgun 라틴으로 렌더된다. */
-  --font-body: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Segoe UI",
+  /* 서체 — 2026-08-28 사용자 요청 "모던하게": 제목·본문 모두 Pretendard Variable(OFL, self-host,
+     /fonts/pretendard/ 동적 서브셋 — Layout.astro head 의 <link> 가 로드). 로드 전·실패 시 시스템 산세리프.
+     라틴 서체를 한글 서체 앞에 둔다 — 글리프 단위 폴백이라 한글은 뒤의 한글 서체로 떨어진다. */
+  --font-display: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI",
     system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "맑은 고딕", Roboto, sans-serif;
+  --font-body: var(--font-display);
   --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono",
     Menlo, monospace;
 
@@ -122,9 +121,9 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 700;
   line-height: var(--leading-tight);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
   margin: 0;
 }
 
@@ -259,7 +258,6 @@ ol {
 
 .prose h4 {
   font-size: var(--text-base);
-  font-family: var(--font-body);
   font-weight: 600;
 }
 

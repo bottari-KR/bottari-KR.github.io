@@ -1,6 +1,9 @@
 // 사이트 전역 상수 — 이름·설명·GitHub 은 여기 한 곳에서만 바꾼다. 사이트 주소는 astro.config.mjs 의 `site`.
 export const SITE = {
   name: 'bottari-KR',
+  /** 홈 히어로 헤드라인(사용자 지정 문구) */
+  tagline: 'Jun bundle',
+  /** 검색·공유용 설명(meta description) */
   description: 'bottari-KR의 개발 기록',
   github: 'https://github.com/bottari-KR',
   lang: 'ko',
