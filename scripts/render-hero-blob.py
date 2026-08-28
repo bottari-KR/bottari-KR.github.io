@@ -39,15 +39,16 @@ y = (yy - cy) / S
 th = np.radians(37)
 u = x * np.cos(th) + y * np.sin(th)
 v = -x * np.sin(th) + y * np.cos(th)
-A, B = 0.355, 0.295  # 반장축·반단축(캔버스 비율). 이 경계가 "본색이 끝나는 선"
+A, B = 0.30, 0.30  # 반지름(캔버스 비율). 이 경계가 "본색이 끝나는 선". 레퍼런스는 원 — 타원(0.355/0.295)은
+                   # 사용자가 "휘어졌다"로 기각(2026-08-28). 모멘트 실측의 584x417 은 번짐 비대칭이 섞인 값이었다.
 rho = np.sqrt((u / A) ** 2 + (v / B) ** 2)
 
 # 방향별 번짐 폭 — 오른쪽 위(1~2시)로 갈수록 길게, 왼쪽·아래는 짧고 또렷하게
 ang = np.arctan2(y, x)
 soft = (1 + np.cos(ang - np.radians(-35))) / 2  # 1 = 가장 부드러운 방향
 soft = soft ** 1.6
-w_in = 0.018 + 0.14 * soft
-w_out = 0.008 + 0.46 * soft
+w_in = 0.018 + 0.12 * soft
+w_out = 0.008 + 0.42 * soft
 t = (rho - (1 - w_in)) / (w_in + w_out)
 alpha = 1 - smoothstep(t)
 

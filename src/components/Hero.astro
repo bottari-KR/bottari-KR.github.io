@@ -63,7 +63,7 @@ const lines = title.split(' ');
     color: var(--hero-fg);
     /* --blob = 원 이미지 요소의 한 변. 이미지 안에서 보이는 원은 한 변의 약 72%(scripts/render-hero-blob.py 출력) */
     --blob: min(92cqh, 80cqw);
-    --blob-x: 47%;
+    --blob-x: 46%;
     --blob-y: 58%;
   }
 
@@ -105,11 +105,12 @@ const lines = title.split(' ');
     translate: -50% -50%;
     overflow: visible;
     fill: var(--hero-fg);
-    font-family: var(--font-display);
+    /* 곡선 문구만 다른 서체(--font-arc, global.css) — 사용자 지정. 없으면 본문 서체 */
+    font-family: var(--font-arc, var(--font-display));
     font-size: 2.9px; /* viewBox 단위 — 컨테이너와 같이 커진다 */
     font-weight: 500;
     letter-spacing: 0.3px;
-    text-transform: uppercase;
+    /* 대소문자는 원문 그대로(사용자: "내가 보낸 이대로") */
   }
 
   .content {
