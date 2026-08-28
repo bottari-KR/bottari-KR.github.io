@@ -45,37 +45,10 @@ const { title, sub, width = 'wide' } = Astro.props;
     text-align: center;
     /* 위는 얹힌 헤더(≈5rem) 아래에서 시작 */
     padding: clamp(8rem, 22vh, 12rem) var(--hero-inset) clamp(5rem, 12vh, 8rem);
-    /* 2026-08-28 사용자: 원만 오른쪽에 있으니 심심하다 → 사용자가 준 목판화풍 그림(해는 지움, scripts/prepare-band-fuji.py)을
-       띠 배경으로 깔고, 산호색 원이 그 해 자리에 앉는다. 위·아래는 종이색으로 녹여 제목과 패널이 읽히게 한다. */
-    background-image:
-      linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--hero-bg) 55%, transparent) 0%,
-        color-mix(in srgb, var(--hero-bg) 20%, transparent) 35%,
-        color-mix(in srgb, var(--hero-bg) 35%, transparent) 70%,
-        var(--hero-bg) 100%
-      ),
-      url('/media/band-fuji.webp');
-    background-size: cover;
-    background-position: center 38%;
   }
   .band-text {
     position: relative;
     z-index: 1;
-  }
-  /* 제목 뒤 종이색 무리 — 그림 위에서도 글자가 읽히게 */
-  .band-text::before {
-    content: '';
-    position: absolute;
-    inset: -3rem -6rem;
-    z-index: -1;
-    background: radial-gradient(
-      ellipse at center,
-      color-mix(in srgb, var(--hero-bg) 80%, transparent) 0%,
-      color-mix(in srgb, var(--hero-bg) 50%, transparent) 45%,
-      transparent 75%
-    );
-    pointer-events: none;
   }
   h1 {
     font-size: clamp(2.5rem, 2rem + 3vw, 4.5rem);
@@ -89,15 +62,15 @@ const { title, sub, width = 'wide' } = Astro.props;
     color: var(--hero-fg-muted);
   }
 
-  /* 산호색 원 = 그림의 해 자리(오른쪽 위, 산 정상 옆). 헤더 글자(맨 위 ≈5rem)에는 안 닿게 */
+  /* 띠 오른쪽 가장자리에 원 — 홈·소개와 같은 모티프. 헤더 글자(맨 위 ≈5rem)에는 안 닿게 띠 중간 아래에 둔다 */
   .blob-wrap {
     position: absolute;
     z-index: 0;
-    right: 14%;
-    top: 34%;
-    width: min(16vw, 12rem);
+    right: 0;
+    top: 62%;
+    width: min(40vw, 28rem);
     aspect-ratio: 1;
-    translate: 50% -50%;
+    translate: 42% -50%;
     pointer-events: none;
   }
   .blob {
@@ -129,9 +102,9 @@ const { title, sub, width = 'wide' } = Astro.props;
       padding-top: clamp(9rem, 24vh, 11rem);
     }
     .blob-wrap {
-      width: 30vw;
-      right: 12%;
-      top: 38%;
+      width: 60vw;
+      top: 70%;
+      translate: 45% -50%;
     }
     .panel {
       border-radius: 10px;
