@@ -7,12 +7,12 @@ import { SITE } from '../site';
 
 interface Props {
   title?: string;
-  /** 원 둘레를 도는 문구 — 기본은 사이트 설명 */
+  /** 원 둘레를 도는 문구 — 기본은 SITE.heroArc */
   arc?: string;
   cta?: { href: string; label: string };
 }
 
-const { title = SITE.tagline, arc = SITE.description, cta = { href: '#posts', label: '글 보기' } } = Astro.props;
+const { title = SITE.tagline, arc = SITE.heroArc, cta = { href: '#posts', label: '글 보기' } } = Astro.props;
 // 헤드라인은 어절마다 한 줄 — 레퍼런스의 "DESIGN / PORTFOLIO" 두 줄 쌓기. 텍스트 노드 사이 공백은 접근성 이름에 남는다.
 const lines = title.split(' ');
 ---
@@ -77,15 +77,18 @@ const lines = title.split(' ');
     aspect-ratio: 1;
     translate: -50% -50%;
     border-radius: 50%;
-    /* 중심을 왼쪽 아래로 밀어 오른쪽 위가 길게 번지게 — 레퍼런스의 비대칭 */
+    /* 레퍼런스 실측(가로 단면): 왼쪽은 지름의 12% 안에서 배경→본색, 오른쪽 위는 지름의 35%에 걸쳐 길게 번진다.
+       속은 거의 단색. 그래서 중심을 왼쪽 아래로 밀고(farthest-side = 오른쪽 위까지가 반지름) 58%까지 단색,
+       왼쪽·아래는 원 클립 선에서 끊긴다. 블러는 클립 선 계단만 지울 정도 — 흐릿한 구름이 아니라 종이에 찍힌 원. */
     background: radial-gradient(
-      circle at 40% 60%,
-      var(--hero-blob) 0 28%,
-      color-mix(in srgb, var(--hero-blob) 80%, transparent) 44%,
-      color-mix(in srgb, var(--hero-blob) 34%, transparent) 64%,
-      transparent 86%
+      circle farthest-side at 35% 58%,
+      var(--hero-blob) 0 56%,
+      color-mix(in srgb, var(--hero-blob) 90%, var(--hero-bg)) 66%,
+      color-mix(in srgb, var(--hero-blob) 55%, var(--hero-bg)) 80%,
+      color-mix(in srgb, var(--hero-blob) 18%, var(--hero-bg)) 92%,
+      var(--hero-bg) 100%
     );
-    filter: blur(14px);
+    filter: blur(1px);
   }
 
   .arc {

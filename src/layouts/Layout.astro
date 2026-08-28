@@ -50,7 +50,9 @@ function isCurrent(href: string) {
   <body class:list={[{ 'has-hero': hero }]}>
     <a class="skip" href="#main">본문으로 건너뛰기</a>
     <header class:list={['site-header', 'wrap', { overlay: hero }]}>
-      <a class="brand" href="/" aria-label={`${SITE.name} 홈`}>{SITE.name}<span class="dot">.</span></a>
+      <a class="brand" href="/" aria-label={`${SITE.brand} 홈`}>
+        {SITE.brand}<span class="emoji" aria-hidden="true">{SITE.brandEmoji}</span>
+      </a>
       <nav aria-label="주 메뉴">
         <ul>
           {
@@ -122,8 +124,9 @@ function isCurrent(href: string) {
     color: var(--fg);
     text-decoration: none;
   }
-  .dot {
-    color: var(--accent);
+  .emoji {
+    margin-left: 0.3em;
+    font-size: 0.9em;
   }
 
   nav ul {
@@ -181,9 +184,6 @@ function isCurrent(href: string) {
   }
   .site-header.overlay .brand:hover {
     color: var(--hero-fg);
-  }
-  .site-header.overlay .dot {
-    color: var(--hero-blob);
   }
   .site-header.overlay nav a:hover {
     color: var(--hero-fg);
