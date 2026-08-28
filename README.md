@@ -27,5 +27,7 @@ npm run dev               # 로컬 미리보기 (draft 도 보인다)
   첫 장의 구성(회색 그레인 배경 · 산호색 그러데이션 원 · 곡선 문구 · 좌하단 대형 헤드라인)을 참고해 새로 그렸다.
   원본 이미지는 쓰지 않는다 — 원(`public/media/hero-blob.webp`, 1200px 투명 WebP)은 `scripts/render-hero-blob.py`가
   실측 수치(타원 비율·기울기·방향별 번짐·색·노이즈)로 렌더한 것이고, 배경 그레인은 인라인 SVG, 곡선 문구는 SVG textPath.
+- 헤더 홈 버튼 그림(`public/media/brand-santa.webp`) — 사이트 주인이 준 산타 사진(`santa.jpg`, 출처 미확인)에서
+  `scripts/prepare-brand-santa.py` 로 흰 배경을 지우고 128px 로 줄인 것. 사진의 저작권·이용 조건은 주인이 확인한다.
 - 목록 페이지 패널 위 두루미(`src/components/Cranes.astro`) — 직접 그린 SVG 라인아트. 먹선 단정학 그림(Pinterest 핀, 작가 미상)의
   스타일(흰 몸 · 검은 날개깃 · 붉은 정수리 · 가는 먹선)만 참고했고 그림 자체는 쓰지 않았다. 색은 `--crane-*` 토큰.

@@ -52,7 +52,8 @@ function isCurrent(href: string) {
     <a class="skip" href="#main">본문으로 건너뛰기</a>
     <header class:list={['site-header', 'wrap', { overlay: hero }]}>
       <a class="brand" href="/" aria-label={`${SITE.brand} 홈`}>
-        {SITE.brand}<span class="emoji" aria-hidden="true">{SITE.brandEmoji}</span>
+        <img class="brand-mark" src={SITE.brandMark} alt="" width="128" height="128" decoding="async" />
+        {SITE.brand}
       </a>
       <nav aria-label="주 메뉴">
         <ul>
@@ -116,6 +117,9 @@ function isCurrent(href: string) {
   }
 
   .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
     font-family: var(--font-display);
     font-size: var(--text-lg);
     letter-spacing: -0.02em;
@@ -125,9 +129,11 @@ function isCurrent(href: string) {
     color: var(--fg);
     text-decoration: none;
   }
-  .emoji {
-    margin-left: 0.3em;
-    font-size: 0.9em;
+  /* 그림이 글자 앞 — 2026-08-28 사용자 요청(이모지 → 산타 사진, 순서는 그림 다음 글자) */
+  .brand-mark {
+    height: 1.5em;
+    width: auto;
+    user-select: none;
   }
 
   nav ul {

@@ -8,8 +8,8 @@
 //   skills : 문자열 목록 (작은 칩으로 나온다)
 
 export const PROFILE = {
-  name: '이름 / NAME (입력 예정)',
-  birth: 'YYYY.MM.DD (입력 예정)',
+  name: '이원준 / LEE WON JUN',
+  birth: '2003.12.11',
 
   education: [
     { year: 'YYYY', text: '학교 · 학과 (입력 예정)' },
