@@ -6,9 +6,9 @@ const posts = await getPublishedPosts();
 const tags = countTags(posts);
 ---
 
-<Layout title="Tags" description="태그별 글 목록">
+<Layout title="태그" description="태그별 글 목록">
   <header class="page-head">
-    <h1>Tags</h1>
+    <h1>태그</h1>
   </header>
   {
     tags.length === 0 ? (

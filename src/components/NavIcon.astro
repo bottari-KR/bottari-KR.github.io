@@ -1,0 +1,35 @@
+---
+// 헤더 메뉴 아이콘 — 인라인 SVG, stroke=currentColor 라 글자색을 그대로 따른다(컬러 이모지는 CSS 로 색을 못 바꾼다).
+// 직접 그린 단순 선 아이콘. 장식이라 aria-hidden.
+import type { NavIconName } from '../site';
+
+interface Props {
+  name: NavIconName;
+}
+
+const { name } = Astro.props;
+
+const PATHS: Record<NavIconName, string> = {
+  home: 'M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10',
+  grid: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',
+  tag: 'M3 3h8l10 10-8 8L3 11zM7.5 7.5h.01',
+  archive: 'M3 5h18v4H3zM5 9v10h14V9M10 13h4',
+  user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
+  mail: 'M3 6h18v12H3zM3 7l9 6 9-6',
+  github: 'M6 3v12M6 15a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 9a6 6 0 0 1-6 6H9',
+};
+---
+
+<svg class="nav-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+  <path d={PATHS[name]} fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+
+<style>
+  .nav-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    margin-right: 0.35em;
+  }
+</style>

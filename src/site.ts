@@ -20,11 +20,13 @@ export const SITE = {
 export const CATEGORIES = ['Projects', 'Hackathon', 'Notes'] as const;
 export type Category = (typeof CATEGORIES)[number];
 
+// 헤더 메뉴 — 한국어 라벨(2026-08-28 사용자 결정) + 글자색과 같은 단색 아이콘(src/components/NavIcon.astro 의 이름).
 export const NAV = [
-  { href: '/', label: 'Home' },
-  { href: '/categories/', label: 'Categories' },
-  { href: '/tags/', label: 'Tags' },
-  { href: '/archive/', label: 'Archive' },
-  { href: '/about/', label: 'About' },
-  { href: '/contact/', label: 'Contact' },
+  { href: '/', label: '홈', icon: 'home' },
+  { href: '/categories/', label: '카테고리', icon: 'grid' },
+  { href: '/tags/', label: '태그', icon: 'tag' },
+  { href: '/archive/', label: '아카이브', icon: 'archive' },
+  { href: '/about/', label: '소개', icon: 'user' },
+  { href: '/contact/', label: '연락', icon: 'mail' },
 ] as const;
+export type NavIconName = (typeof NAV)[number]['icon'] | 'github';

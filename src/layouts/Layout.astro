@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { SITE, NAV } from '../site';
+import NavIcon from '../components/NavIcon.astro';
 
 interface Props {
   title?: string;
@@ -59,14 +60,14 @@ function isCurrent(href: string) {
             NAV.map((item) => (
               <li>
                 <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
-                  {item.label}
+                  <NavIcon name={item.icon} />{item.label}
                 </a>
               </li>
             ))
           }
           <li class="ext">
             <a href={SITE.github} rel="me">
-              GitHub<span aria-hidden="true">↗</span>
+              <NavIcon name="github" />깃허브<span aria-hidden="true">↗</span>
             </a>
           </li>
         </ul>
@@ -136,6 +137,11 @@ function isCurrent(href: string) {
     list-style: none;
     font-size: var(--text-sm);
     color: var(--fg-muted);
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
   }
   nav a[aria-current='page'] {
     color: var(--fg);
