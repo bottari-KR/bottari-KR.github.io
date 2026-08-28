@@ -198,7 +198,8 @@ const cranes = FLOCKS[flock];
     (_S, B, U) => [[-1.0 * B, 0.4 * U], [-0.6 * B, 0.12 * U], [-0.25 * B, 0.02 * U], [0, 0]], // 낮게 다가와 착지
     (_S, B, U) => [[-0.9 * B, 1.1 * U], [-0.25 * B, 0.95 * U], [-0.3 * B, 0.25 * U], [0, 0]], // 돌아 들어와 급강하 뒤 플레어
   ];
-  const SPEED = 760; // px/s — 모든 경로 공통
+  // 순항 속도(px/s)는 비행마다 이 범위에서 무작위 — 3차 피드백("아직 너무 빨라, 매번 같은 속도 말고 랜덤"). 한 비행 안에서는 등속.
+  const SPEED_MIN = 330, SPEED_MAX = 520;
   const FLARE = 0.25; // 복귀 마지막 감속 구간(비율)
 
   function bez(p: [Pt, Pt, Pt, Pt], t: number): Pt {
@@ -208,7 +209,7 @@ const cranes = FLOCKS[flock];
   }
 
   /** 경로 → 등속 키프레임. face 로 u 를 화면 x 로, v 는 -y 로. profile: 시간→거리 비율(가속·감속) */
-  function keyframes(p: [Pt, Pt, Pt, Pt], face: number, mode: 'out' | 'back') {
+  function keyframes(p: [Pt, Pt, Pt, Pt], face: number, mode: 'out' | 'back', speed: number) {
     const N = 240;
     const pts: Pt[] = [];
     const cum: number[] = [0];
@@ -225,7 +226,7 @@ const cranes = FLOCKS[flock];
     const dist: number[] = [0];
     for (let i = 1; i <= K; i++) dist.push(dist[i - 1] + (vel((i - 0.5) / K) + vel(i / K)) / 2);
     const meanV = dist[K] / K;
-    const duration = (L / (SPEED * meanV)) * 1000; // ms. 프로필 평균 속도로 보정해 SPEED 가 순항 속도가 되게
+    const duration = (L / (speed * meanV)) * 1000; // ms. 프로필 평균 속도로 보정해 speed 가 순항 속도가 되게
     const forward = face === 1 ? 0 : 180;
     const noseUp = face === 1 ? -1 : 1; // CSS rotate 는 시계방향 +. 왼쪽 보는 새는 + 가 코 들기
     const frames = [];
@@ -263,22 +264,26 @@ const cranes = FLOCKS[flock];
     const S = (face === 1 ? W - r.left : r.right) + 60; // 앞쪽으로 화면 밖까지
     const B = (face === 1 ? r.right : W - r.left) + 60; // 뒤쪽으로 화면 밖까지
     const U = r.bottom + 60; // 위로 화면 밖까지
-    el.style.setProperty('--flap', `${Math.round(rnd(250, 330))}ms`);
+    // 이륙·복귀 속도를 따로 뽑는다(다른 비행이니까). 날갯짓 주기는 속도에 맞춰 — 빠를수록 잦게
+    const vOut = rnd(SPEED_MIN, SPEED_MAX), vBack = rnd(SPEED_MIN, SPEED_MAX);
+    const flap = (v: number) => `${Math.round(360 - ((v - SPEED_MIN) / (SPEED_MAX - SPEED_MIN)) * 100)}ms`;
+    el.style.setProperty('--flap', flap(vOut));
 
     // 이륙
     el.dataset.state = 'land';
     await wait(rnd(110, 240));
     el.dataset.state = 'fly';
-    const out = keyframes(pick(TAKEOFFS)(S, B, U), face, 'out');
+    const out = keyframes(pick(TAKEOFFS)(S, B, U), face, 'out', vOut);
     const a1 = el.animate(out.frames, { duration: out.duration, fill: 'forwards' });
     await a1.finished;
 
     // 체공(화면 밖)
     el.style.visibility = 'hidden';
-    await wait(rnd(1700, 3200));
+    await wait(rnd(1200, 2600));
+    el.style.setProperty('--flap', flap(vBack));
 
     // 복귀: 중간은 활공, 가까워지면 날갯짓, 직전에 착지 자세. 애니메이션을 먼저 걸고 보이게 한다(이륙 끝점에서 한 프레임 안 튀게)
-    const back = keyframes(pick(RETURNS)(S, B, U), face, 'back');
+    const back = keyframes(pick(RETURNS)(S, B, U), face, 'back', vBack);
     const a2 = el.animate(back.frames, { duration: back.duration, fill: 'forwards' });
     a1.cancel();
     el.style.visibility = '';
@@ -300,8 +305,9 @@ const cranes = FLOCKS[flock];
       ).finished;
       await wait(120);
     } else if (finish === 'shake') {
+      // 'settle' 은 선 자세(CSS 규칙 없음)지만 state 가 남아 있어 hover 재진입이 새 비행을 시작하지 못한다
       await wait(140);
-      delete el.dataset.state;
+      el.dataset.state = 'settle';
       await wait(260);
       el.dataset.state = 'land';
       await wait(170);
