@@ -7,7 +7,7 @@
   front matter 필수 = `title` · `description` · `pubDate`(`YYYY-MM-DD`) · `categories`.
   **게시하려면 `draft: false`를 명시한다** — 생략하면 `true`(비공개)라 빌드에서 조용히 빠진다. dev 서버는 draft도 보여 준다.
   `cover`는 `public/` 기준 절대 경로(`/images/...`) 또는 `""`.
-- 카테고리: `Projects` · `Hackathon` · `Notes` (`src/site.ts`의 `CATEGORIES`가 코드 쪽 정본).
+- 카테고리: `Projects` · `Retrospect` · `Notes` (`src/site.ts`의 `CATEGORIES`가 코드 쪽 정본. 표시용 이모지는 `CATEGORY_EMOJI`).
 
 ```sh
 npm install

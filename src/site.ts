@@ -19,8 +19,15 @@ export const SITE = {
 
 // 카테고리 — 코드 쪽 정본. 순서가 곧 표시 순서. src/content.config.ts 의 enum 이 이 배열을 쓴다.
 // 문서 쪽 정본은 에이전트 rule(post-format.md) — 새 카테고리는 사용자가 정하고 두 곳을 같이 바꾼다.
-export const CATEGORIES = ['Projects', 'Hackathon', 'Notes'] as const;
+export const CATEGORIES = ['Projects', 'Retrospect', 'Notes'] as const;
 export type Category = (typeof CATEGORIES)[number];
+
+/** 카테고리 앞 이모지(2026-08-31 사용자 요청) — 카테고리 페이지 표기용. 글 front matter 에는 안 들어간다 */
+export const CATEGORY_EMOJI: Record<Category, string> = {
+  Projects: '🚀',
+  Retrospect: '🔁',
+  Notes: '📝',
+};
 
 // 헤더 메뉴 — 한국어 라벨(2026-08-28 사용자 결정) + 글자색과 같은 단색 아이콘(src/components/NavIcon.astro 의 이름).
 export const NAV = [

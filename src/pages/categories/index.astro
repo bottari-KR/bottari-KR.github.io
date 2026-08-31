@@ -2,6 +2,7 @@
 // 카테고리 목록 — ruby-kim.github.io/categories 구조: 행마다 이름 + 글 수, 그 아래 그 카테고리에 쓰인 태그와 최신 글 제목.
 import Layout from '../../layouts/Layout.astro';
 import ListShell from '../../components/ListShell.astro';
+import { CATEGORY_EMOJI, type Category } from '../../site';
 import { getPublishedPosts, countCategories, categoryHref, tagHref, postHref } from '../../lib/posts';
 
 const posts = await getPublishedPosts();
@@ -20,6 +21,7 @@ const categories = countCategories(posts).map(({ name, count }) => {
           <li class="row">
             <div class="head">
               <a class="name" href={categoryHref(name)}>
+                <span class="cat-emoji" aria-hidden="true">{CATEGORY_EMOJI[name as Category]}</span>
                 {name}
               </a>
               <span class="count">{count}</span>
@@ -69,6 +71,11 @@ const categories = countCategories(posts).map(({ name, count }) => {
     font-size: var(--text-lg);
     font-weight: 700;
     letter-spacing: -0.02em;
+  }
+  /* 카테고리 앞 이모지(2026-08-31 사용자 요청) */
+  .cat-emoji {
+    margin-right: 0.35em;
+    font-size: 0.9em;
   }
   .count {
     font-family: var(--font-mono);

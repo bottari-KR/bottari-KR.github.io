@@ -3,7 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import Layout from '../../layouts/Layout.astro';
 import ListShell from '../../components/ListShell.astro';
 import PostCard from '../../components/PostCard.astro';
-import { CATEGORIES } from '../../site';
+import { CATEGORIES, CATEGORY_EMOJI, type Category } from '../../site';
 import { getPublishedPosts, postHref, type Post } from '../../lib/posts';
 
 // 글이 없는 카테고리도 페이지를 만든다 — 카테고리 목록의 링크가 404 로 가지 않게.
@@ -21,10 +21,12 @@ interface Props {
 }
 
 const { category, posts } = Astro.props;
+// 띠 제목에만 이모지 — 브라우저 탭 제목(Layout title)은 글자만
+const emoji = CATEGORY_EMOJI[category as Category];
 ---
 
 <Layout title={category} description={`${category} 카테고리의 글`} hero>
-  <ListShell title={category} sub={`카테고리 · ${posts.length}편`}>
+  <ListShell title={`${emoji} ${category}`} sub={`카테고리 · ${posts.length}편`}>
     <p class="crumb"><a href="/categories/">← 카테고리 전체</a></p>
     {
       posts.length === 0 ? (
