@@ -24,8 +24,8 @@ export type Category = (typeof CATEGORIES)[number];
 
 /** 카테고리 앞 이모지(2026-08-31 사용자 요청) — 카테고리 페이지 표기용. 글 front matter 에는 안 들어간다 */
 export const CATEGORY_EMOJI: Record<Category, string> = {
-  Projects: '🚀',
-  Retrospect: '🔁',
+  Projects: '⚒️',
+  Retrospect: '📌',
   Notes: '📝',
 };
 
