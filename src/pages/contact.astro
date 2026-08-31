@@ -1,6 +1,6 @@
 ---
-// 문의 — ruby-kim.github.io/contact 구조: 위 요약 줄(운영자 · 연락처 · 회신), 연락 카드, 아래 본문 절.
-// 내용은 src/data/contact.ts 에서만 고친다 — 지금은 임시 자리표시.
+// 문의 — ruby-kim.github.io/contact 구조: 위 요약 줄(운영자 · 연락처), 연락 카드, 아래 본문 절.
+// 내용은 src/data/contact.ts 에서만 고친다. 회신 줄·협업 절은 2026-08-31 사용자 요청으로 삭제.
 import Layout from '../layouts/Layout.astro';
 import ListShell from '../components/ListShell.astro';
 import NavIcon from '../components/NavIcon.astro';
@@ -9,7 +9,7 @@ import { CONTACT } from '../data/contact';
 ---
 
 <Layout title="문의" description={`${SITE.name} 연락처`} hero>
-  <ListShell title="문의" sub="글 오류 제보 · 협업 제안" width="narrow" flock="contact">
+  <ListShell title="문의" sub="글 오류 · 깨진 링크 제보" width="narrow" flock="contact">
     <dl class="meta">
       <div>
         <dt>운영자</dt>
@@ -18,10 +18,6 @@ import { CONTACT } from '../data/contact';
       <div>
         <dt>연락처</dt>
         <dd>{CONTACT.email}</dd>
-      </div>
-      <div>
-        <dt>회신</dt>
-        <dd>{CONTACT.replyWithin}</dd>
       </div>
     </dl>
 
@@ -74,7 +70,7 @@ import { CONTACT } from '../data/contact';
   .meta {
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--rule);
