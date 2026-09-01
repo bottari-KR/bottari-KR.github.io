@@ -5,7 +5,7 @@ pubDate: 2026-07-31
 categories: ["Projects"]
 tags: ["langgraph", "rag", "fastapi", "react"]
 cover: ""
-draft: true
+draft: false
 ---
 
 ## 왜 (문제·동기)
@@ -79,7 +79,6 @@ AI 비용이 만만치 않았다. AI가 하는 일을 뜯어봤더니 성격이 
 ### 내가 만든 것들
 
 - 광주권 기업 리서치 시트 구축 및 전화 검증 (약 60통)
-- (확인 필요 — 본인 담당 파트를 알려주면 채운다)
 
 ## 배운 점
 
