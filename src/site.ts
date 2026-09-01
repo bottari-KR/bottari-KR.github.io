@@ -12,6 +12,8 @@ export const SITE = {
   heroArc: 'AI Engineer',
   /** 검색·공유용 설명(meta description) */
   description: 'bottari-KR의 개발 기록',
+  /** 푸터 소개 문구(2026-09-01 사용자 지정) — meta description 과 분리 */
+  footerLine: '나의 기록을 보따리에 담아가다.',
   github: 'https://github.com/bottari-KR',
   lang: 'ko',
   pageSize: 10,
