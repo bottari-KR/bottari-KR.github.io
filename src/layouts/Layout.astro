@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { SITE, NAV } from '../site';
+import { CONTACT } from '../data/contact';
 import NavIcon from '../components/NavIcon.astro';
 
 interface Props {
@@ -79,13 +80,63 @@ function isCurrent(href: string) {
       <slot />
     </main>
 
-    <footer class="site-footer wrap">
-      <p>
-        © {new Date().getFullYear()} {SITE.name}
-        <span class="sep" aria-hidden="true">·</span>
-        <a href={SITE.github} rel="me">GitHub</a>
-      </p>
+    <!-- 푸터 — 남색 전폭 띠(2026-09-01 사용자 요청, ruby-kim 푸터 구조 참고): 소개 · 메뉴 · 연결 + 저작권 줄 -->
+    <footer class="site-footer">
+      <div class="wrap cols">
+        <div class="intro">
+          <p class="name">{SITE.brand}</p>
+          <p class="desc">{SITE.description}</p>
+        </div>
+        <nav class="menu" aria-label="푸터 메뉴">
+          <p class="hd" id="footer-menu-hd">메뉴</p>
+          <ul aria-labelledby="footer-menu-hd">
+            {
+              NAV.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <div class="links">
+          <p class="hd">연결</p>
+          <ul class="round">
+            <li>
+              <a href={SITE.github} rel="me" aria-label="GitHub"><NavIcon name="github" /></a>
+            </li>
+            <li>
+              <a href={`mailto:${CONTACT.email}`} aria-label="이메일"><NavIcon name="mail" /></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="wrap bottom">
+        <p>© {new Date().getFullYear()} {SITE.name}</p>
+        <p>제작 <a href="https://astro.build/">Astro</a></p>
+      </div>
     </footer>
+
+    <!-- 맨 위로 — 스크롤하면 우하단에 나타난다 -->
+    <button class="to-top" aria-label="맨 위로" hidden>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M5 14.5 12 7.5 19 14.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </button>
+    <script>
+      const btn = document.querySelector<HTMLButtonElement>('.to-top');
+      if (btn) {
+        const sync = () => {
+          btn.hidden = scrollY < 480;
+        };
+        addEventListener('scroll', sync, { passive: true });
+        sync();
+        btn.addEventListener('click', () => {
+          const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+          scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+        });
+      }
+    </script>
   </body>
 </html>
 
@@ -214,20 +265,104 @@ function isCurrent(href: string) {
   }
   .has-hero main {
     position: relative;
+    /* 히어로형 페이지는 섹션이 자체 여백을 가진다 — 종이색과 남색 푸터 사이 흰 띠가 안 생기게 */
+    padding-bottom: 0;
   }
 
   .site-footer {
-    border-top: 1px solid var(--rule);
-    padding-block: 2rem 3rem;
+    background: var(--footer-bg);
+    color: var(--footer-fg-muted);
     font-size: var(--text-sm);
-    color: var(--fg-muted);
   }
   .site-footer a {
-    /* 문장 속 링크 — 색만으로 구분하지 않는다 */
-    text-decoration: underline;
-    text-decoration-color: var(--fg-faint);
+    color: inherit;
   }
-  .sep {
-    margin-inline: 0.5rem;
+  .site-footer a:hover {
+    color: var(--footer-fg);
+    text-decoration: none;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem 3rem;
+    padding-block: 3.5rem 2.75rem;
+  }
+  .site-footer .name {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--footer-fg);
+  }
+  .site-footer .desc {
+    margin-top: 0.75rem;
+    max-width: 32rem;
+  }
+  .hd {
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+  .site-footer ul {
+    list-style: none;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .round {
+    grid-auto-flow: column;
+    justify-content: start;
+    gap: 0.75rem;
+  }
+  .round a {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: var(--footer-chip);
+    color: var(--footer-fg);
+  }
+  .round a:hover {
+    background: var(--footer-chip-hover);
+  }
+  .round :global(.nav-icon) {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    padding-block: 1.4rem;
+    border-top: 1px solid var(--footer-rule);
+  }
+  @media (max-width: 48rem) {
+    .cols {
+      grid-template-columns: 1fr;
+      gap: 2.25rem;
+      padding-block: 2.75rem 2.25rem;
+    }
+  }
+
+  /* 맨 위로 버튼 — 우하단 고정, 스크롤 480px 넘으면 스크립트가 hidden 을 푼다 */
+  .to-top {
+    position: fixed;
+    right: clamp(1rem, 3vw, 2.25rem);
+    bottom: clamp(1rem, 3vw, 2.25rem);
+    z-index: 6;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 12px;
+    border: 0;
+    display: grid;
+    place-items: center;
+    background: var(--top-btn-bg);
+    color: var(--top-btn-fg);
+    cursor: pointer;
+    box-shadow: 0 6px 20px -8px rgb(0 0 0 / 0.35);
+  }
+  .to-top:hover {
+    background: var(--top-btn-bg-hover);
   }
 </style>

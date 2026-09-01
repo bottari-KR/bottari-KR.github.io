@@ -31,6 +31,16 @@
   --crane-body: #ffffff;
   --crane-ink: #262624;
   --crane-crown: #c8372d;
+  /* 푸터(전폭 남색 띠) + 맨 위로 버튼 — 2026-09-01 사용자 요청, ruby-kim(Matery) 푸터 참고 */
+  --footer-bg: #1c2534;
+  --footer-fg: #eceff4; /* #1c2534 위 12.9:1 */
+  --footer-fg-muted: #9aa4b5; /* #1c2534 위 5.5:1 */
+  --footer-rule: #2e3a4d;
+  --footer-chip: #2a3547;
+  --footer-chip-hover: #35425a;
+  --top-btn-bg: #ccd5e0;
+  --top-btn-bg-hover: #bcc8d8;
+  --top-btn-fg: #1c2534;
 
   /* 서체 — 2026-08-28 사용자 요청 "모던하게": 제목·본문 모두 Pretendard Variable(OFL, self-host,
      /fonts/pretendard/ 동적 서브셋 — Layout.astro head 의 <link> 가 로드). 로드 전·실패 시 시스템 산세리프.
@@ -87,6 +97,15 @@
     --crane-body: #1b1c1e; /* 어두운 종이 위 선화 — 몸은 패널색, 선은 밝게 */
     --crane-ink: #d9d9d6;
     --crane-crown: #e0524a;
+    --footer-bg: #10151d;
+    --footer-fg: #e6e9ee;
+    --footer-fg-muted: #8e97a6;
+    --footer-rule: #232c3a;
+    --footer-chip: #1f2836;
+    --footer-chip-hover: #2a3547;
+    --top-btn-bg: #333d4e;
+    --top-btn-bg-hover: #3e4a5f;
+    --top-btn-fg: #e6e9ee;
   }
 }
 
