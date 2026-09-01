@@ -1,0 +1,60 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" font-family="'Pretendard','Malgun Gothic','Apple SD Gothic Neo',sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8a877f"/>
+    </marker>
+  </defs>
+  <rect width="900" height="620" fill="#ffffff"/>
+  <text x="40" y="46" font-size="21" font-weight="700" fill="#21201c">세이프티 가디언 시스템 구조</text>
+  <text x="40" y="68" font-size="13" fill="#78756d">서류가 들어와서 소명자료 초안이 나오기까지</text>
+
+  <!-- 화면 -->
+  <rect x="300" y="92" width="300" height="62" rx="10" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="450" y="118" font-size="15.5" font-weight="700" fill="#21201c" text-anchor="middle">React 대시보드</text>
+  <text x="450" y="138" font-size="12.5" fill="#78756d" text-anchor="middle">문서 업로드 · 의무 게이지 · 채팅 화면</text>
+  <line x1="450" y1="154" x2="450" y2="182" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- 백엔드 -->
+  <rect x="300" y="186" width="300" height="62" rx="10" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="450" y="212" font-size="15.5" font-weight="700" fill="#21201c" text-anchor="middle">FastAPI 백엔드</text>
+  <text x="450" y="232" font-size="12.5" fill="#78756d" text-anchor="middle">업로드 · 고객 프로필 · 판정 API</text>
+  <line x1="450" y1="248" x2="450" y2="276" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- Supervisor -->
+  <rect x="270" y="280" width="360" height="62" rx="10" fill="#f4f4f2" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="450" y="306" font-size="15.5" font-weight="700" fill="#21201c" text-anchor="middle">LangGraph Supervisor</text>
+  <text x="450" y="326" font-size="12.5" fill="#78756d" text-anchor="middle">질문 종류를 분류해 알맞은 흐름으로 전달</text>
+
+  <!-- 분기선 -->
+  <path d="M450 342 V370 H126 V398" fill="none" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+  <path d="M450 342 V370 H342 V398" fill="none" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+  <path d="M450 342 V370 H558 V398" fill="none" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+  <path d="M450 342 V370 H774 V398" fill="none" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- 에이전트 4개 -->
+  <rect x="28" y="402" width="196" height="92" rx="10" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="126" y="436" font-size="14.5" font-weight="700" fill="#21201c" text-anchor="middle">위험 진단</text>
+  <text x="126" y="458" font-size="12" fill="#78756d" text-anchor="middle">데이터 기반</text>
+  <text x="126" y="475" font-size="12" fill="#78756d" text-anchor="middle">리스크 리포트</text>
+
+  <rect x="244" y="402" width="196" height="92" rx="10" fill="#0e7a5f"/>
+  <text x="342" y="431" font-size="14.5" font-weight="700" fill="#ffffff" text-anchor="middle">의무 16개</text>
+  <text x="342" y="450" font-size="14.5" font-weight="700" fill="#ffffff" text-anchor="middle">전수 판정</text>
+  <text x="342" y="474" font-size="12" fill="#d3ece3" text-anchor="middle">체크리스트를 빠짐없이 대조</text>
+
+  <rect x="460" y="402" width="196" height="92" rx="10" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="558" y="436" font-size="14.5" font-weight="700" fill="#21201c" text-anchor="middle">법령·판례 검색</text>
+  <text x="558" y="458" font-size="12" fill="#78756d" text-anchor="middle">RAG (Chroma)</text>
+  <text x="558" y="475" font-size="12" fill="#78756d" text-anchor="middle">문서 자르기 2전략 비교</text>
+
+  <rect x="676" y="402" width="196" height="92" rx="10" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="774" y="436" font-size="14.5" font-weight="700" fill="#21201c" text-anchor="middle">소명자료 초안</text>
+  <text x="774" y="458" font-size="12" fill="#78756d" text-anchor="middle">앞 판정이 끝나기 전엔</text>
+  <text x="774" y="475" font-size="12" fill="#78756d" text-anchor="middle">실행 자체가 불가능</text>
+
+  <!-- 저장소 -->
+  <line x1="450" y1="494" x2="450" y2="522" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+  <rect x="250" y="526" width="400" height="62" rx="10" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="450" y="552" font-size="15.5" font-weight="700" fill="#21201c" text-anchor="middle">SQLite + Chroma</text>
+  <text x="450" y="572" font-size="12.5" fill="#78756d" text-anchor="middle">프로필 · 판정 결과 · 법령 벡터 저장</text>
+</svg>

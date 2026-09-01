@@ -1,0 +1,29 @@
+<svg viewBox="0 0 900 440" xmlns="http://www.w3.org/2000/svg" font-family="'Pretendard','Malgun Gothic','Apple SD Gothic Neo',sans-serif">
+  <rect width="900" height="440" fill="#ffffff"/>
+  <text x="40" y="46" font-size="21" font-weight="700" fill="#21201c">검증 퍼널 — 명단에서 실사용까지</text>
+  <text x="40" y="68" font-size="13" fill="#78756d">개발과 같은 비중으로 진행한 시장 검증</text>
+
+  <!-- 796 -->
+  <rect x="40" y="96" width="680" height="54" rx="8" fill="#f4f4f2"/>
+  <text x="60" y="130" font-size="19" font-weight="700" fill="#21201c">796곳</text>
+  <text x="140" y="129" font-size="13.5" fill="#57544c">직접 조사해 만든 잠재 고객 명단 (광주권 제조업 중심)</text>
+
+  <!-- 208 -->
+  <rect x="40" y="170" width="440" height="54" rx="8" fill="#f4f4f2"/>
+  <text x="60" y="204" font-size="19" font-weight="700" fill="#21201c">208곳</text>
+  <text x="140" y="203" font-size="13.5" fill="#57544c">위험 업종 기준으로 추린 우선순위</text>
+
+  <!-- 200 -->
+  <rect x="40" y="244" width="420" height="54" rx="8" fill="#f4f4f2"/>
+  <text x="60" y="278" font-size="19" font-weight="700" fill="#21201c">200곳</text>
+  <text x="140" y="277" font-size="13.5" fill="#57544c">일주일간 직접 전화 (1인당 약 60통)</text>
+
+  <!-- 4 -->
+  <rect x="40" y="318" width="220" height="54" rx="8" fill="#0e7a5f"/>
+  <text x="60" y="352" font-size="19" font-weight="700" fill="#ffffff">4곳</text>
+  <text x="112" y="351" font-size="13.5" fill="#d3ece3">데모 실사용 + 피드백</text>
+  <text x="280" y="351" font-size="13" fill="#78756d">→ 피드백은 즉시 판정 프롬프트 개선으로 반영</text>
+
+  <line x1="40" y1="398" x2="860" y2="398" stroke="#e7e5e0" stroke-width="1"/>
+  <text x="40" y="422" font-size="12.5" fill="#78756d">조사한 800곳 중 이메일 접점이 확인된 곳은 80곳 — 법 리스크가 큰 회사일수록 온라인으로 닿기 어려웠다</text>
+</svg>

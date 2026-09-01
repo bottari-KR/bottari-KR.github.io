@@ -1,0 +1,29 @@
+<svg viewBox="0 0 900 440" xmlns="http://www.w3.org/2000/svg" font-family="'Pretendard','Malgun Gothic','Apple SD Gothic Neo',sans-serif">
+  <rect width="900" height="440" fill="#ffffff"/>
+  <text x="40" y="46" font-size="21" font-weight="700" fill="#21201c">AI가 하는 일을 둘로 나눴다</text>
+  <text x="40" y="68" font-size="13" fill="#78756d">같은 프롬프트로 두 모델을 나란히 비교한 뒤 결정</text>
+
+  <!-- 판단 -->
+  <rect x="40" y="96" width="390" height="188" rx="12" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="68" y="136" font-size="17" font-weight="700" fill="#21201c">판단</text>
+  <line x1="68" y1="152" x2="402" y2="152" stroke="#e7e5e0" stroke-width="1"/>
+  <text x="68" y="180" font-size="13.5" fill="#57544c">문서가 의무를 충족하는지 결정하는 일</text>
+  <text x="68" y="203" font-size="13.5" fill="#57544c">여기서 틀리면 보고서 전체가 뒤집힌다</text>
+  <rect x="68" y="228" width="128" height="34" rx="17" fill="#21201c"/>
+  <text x="132" y="250" font-size="13.5" font-weight="700" fill="#ffffff" text-anchor="middle">Claude 유지</text>
+
+  <!-- 작성 -->
+  <rect x="470" y="96" width="390" height="188" rx="12" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="498" y="136" font-size="17" font-weight="700" fill="#21201c">작성</text>
+  <line x1="498" y1="152" x2="832" y2="152" stroke="#e7e5e0" stroke-width="1"/>
+  <text x="498" y="180" font-size="13.5" fill="#57544c">이미 끝난 판단을 문장으로 옮겨 쓰는 일</text>
+  <text x="498" y="203" font-size="13.5" fill="#57544c">틀릴 수 있는 여지가 거의 없다</text>
+  <rect x="498" y="228" width="158" height="34" rx="17" fill="#0e7a5f"/>
+  <text x="577" y="250" font-size="13.5" font-weight="700" fill="#ffffff" text-anchor="middle">DeepSeek로 교체</text>
+
+  <!-- 결과 -->
+  <rect x="40" y="320" width="820" height="84" rx="12" fill="#f0f7f4"/>
+  <text x="76" y="374" font-size="38" font-weight="800" fill="#0e7a5f">1/30</text>
+  <text x="196" y="360" font-size="14" fill="#21201c">출력 토큰 비용 절감 — 작성 품질은 대등했다</text>
+  <text x="196" y="384" font-size="12.5" fill="#78756d">비용을 줄인 건 싼 모델이 아니라, 판단과 작성을 나눈 구분선이었다</text>
+</svg>

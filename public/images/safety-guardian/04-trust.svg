@@ -1,0 +1,47 @@
+<svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg" font-family="'Pretendard','Malgun Gothic','Apple SD Gothic Neo',sans-serif">
+  <defs>
+    <marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8a877f"/>
+    </marker>
+  </defs>
+  <rect width="900" height="540" fill="#ffffff"/>
+  <text x="40" y="46" font-size="21" font-weight="700" fill="#21201c">"빠짐없이 봤다"를 보장하는 구조</text>
+  <text x="40" y="68" font-size="13" fill="#78756d">법률 서비스의 신뢰는 그럴듯함이 아니라 빠뜨리지 않음에서 나온다</text>
+
+  <!-- 비교: RAG -->
+  <rect x="40" y="96" width="400" height="140" rx="12" fill="#f4f4f2"/>
+  <text x="68" y="134" font-size="16" font-weight="700" fill="#57544c">AI 검색(RAG)만 쓰면</text>
+  <text x="68" y="166" font-size="13.5" fill="#57544c">비슷한 문서는 잘 찾아준다</text>
+  <text x="68" y="192" font-size="13.5" font-weight="700" fill="#b45309">그러나 "전부 확인했다"는 보장은 못 한다</text>
+  <text x="68" y="216" font-size="12.5" fill="#78756d">15개를 잘해도 놓친 1개가 처벌의 구멍이 된다</text>
+
+  <!-- 비교: 전수판정 -->
+  <rect x="460" y="96" width="400" height="140" rx="12" fill="#ffffff" stroke="#0e7a5f" stroke-width="2"/>
+  <text x="488" y="134" font-size="16" font-weight="700" fill="#0e7a5f">그래서: 체크리스트 전수 판정</text>
+  <text x="488" y="166" font-size="13.5" fill="#57544c">사람이 검수해 만든 의무 16개를</text>
+  <text x="488" y="192" font-size="13.5" fill="#57544c">코드가 순서대로 전부 대조한다</text>
+  <text x="488" y="216" font-size="12.5" fill="#78756d">건너뛰는 경로 자체가 코드에 없다</text>
+
+  <!-- 흐름: 환각 차단 -->
+  <text x="40" y="296" font-size="15" font-weight="700" fill="#21201c">출처는 AI에게 묻지 않는다</text>
+
+  <rect x="40" y="316" width="250" height="88" rx="12" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="165" y="352" font-size="14" font-weight="700" fill="#21201c" text-anchor="middle">AI</text>
+  <text x="165" y="376" font-size="12.5" fill="#78756d" text-anchor="middle">판정 결과 + 근거 문장까지만 출력</text>
+
+  <line x1="290" y1="360" x2="322" y2="360" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar2)"/>
+
+  <rect x="326" y="316" width="250" height="88" rx="12" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="451" y="352" font-size="14" font-weight="700" fill="#21201c" text-anchor="middle">코드</text>
+  <text x="451" y="376" font-size="12.5" fill="#78756d" text-anchor="middle">그 문장을 원문에서 직접 찾아 확인</text>
+
+  <line x1="576" y1="360" x2="608" y2="360" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar2)"/>
+
+  <rect x="612" y="316" width="248" height="88" rx="12" fill="#0e7a5f"/>
+  <text x="736" y="352" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">환각 차단</text>
+  <text x="736" y="376" font-size="12.5" fill="#d3ece3" text-anchor="middle">없는 출처가 섞일 틈이 없다</text>
+
+  <line x1="40" y1="448" x2="860" y2="448" stroke="#e7e5e0" stroke-width="1"/>
+  <text x="40" y="476" font-size="12.5" fill="#78756d">조문 번호와 숫자도 AI 손을 거치지 않는다 — 코드가 직접 끼워 넣는다</text>
+  <text x="40" y="500" font-size="12.5" fill="#78756d">소명자료 초안은 16개 판정이 모두 끝나기 전에는 실행 경로 자체가 열리지 않는다</text>
+</svg>
