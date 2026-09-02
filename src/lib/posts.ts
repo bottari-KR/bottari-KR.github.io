@@ -14,6 +14,26 @@ export async function getPublishedPosts(): Promise<Post[]> {
   );
 }
 
+/**
+ * 본문 글자 수 — 코드 블록·이미지·HTML 태그·마크다운 기호·공백을 뺀 문자 수.
+ * 글 머리 "글자 수"에 쓴다(레퍼런스 hexo-wordcount 와 같은 취지 — 공백 제외).
+ */
+export function countChars(body: string | undefined): number {
+  if (!body) return 0;
+  const t = body
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .replace(/[#>*_`~|-]+/g, '');
+  return t.replace(/\s/g, '').length;
+}
+
+/** 읽기 시간(분) — front matter `readingMinutes` 가 있으면 그 값, 없으면 300자/분 올림(최소 1). */
+export function readingMinutes(post: Post, chars: number): number {
+  return post.data.readingMinutes ?? Math.max(1, Math.ceil(chars / 300));
+}
+
 export function postHref(post: Post): string {
   return `/posts/${post.id}/`;
 }

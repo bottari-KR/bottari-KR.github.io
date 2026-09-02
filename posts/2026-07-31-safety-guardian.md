@@ -6,6 +6,7 @@ categories: ["Projects"]
 tags: ["langgraph", "rag", "fastapi", "react"]
 cover: ""
 draft: false
+readingMinutes: 10
 ---
 
 ## 왜 (문제·동기)

@@ -24,6 +24,8 @@ const posts = defineCollection({
     // public/ 기준 절대 경로(`/images/...`) 또는 빈 문자열 — 상대 경로는 dist 에 복사되지 않는다.
     cover: z.string().regex(/^(\/\S*)?$/, 'cover 는 / 로 시작하는 public/ 경로 또는 ""').default(''),
     draft: z.boolean().default(true),
+    // 읽기 시간(분) 재정의 — 없으면 본문 글자 수 ÷ 300자/분 올림(src/lib/posts.ts). 사용자가 지정할 때만 쓴다.
+    readingMinutes: z.number().int().positive().optional(),
   }),
 });
 

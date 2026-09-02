@@ -3,7 +3,15 @@ import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
-import { getPublishedPosts, postHref, categoryHref, tagHref, type Post } from '../../lib/posts';
+import {
+  getPublishedPosts,
+  postHref,
+  categoryHref,
+  tagHref,
+  countChars,
+  readingMinutes,
+  type Post,
+} from '../../lib/posts';
 
 export const getStaticPaths = (async () => {
   const posts = await getPublishedPosts(); // 최신순
@@ -24,18 +32,41 @@ const { Content, headings } = await render(post);
 const { title, description, pubDate, categories, tags, cover } = post.data;
 // 목차는 h2·h3 만 — 템플릿 절(h2)과 소절(h3)
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+// 글 머리 정보 줄 — 작성일 · 글자 수 · 읽기 시간(레퍼런스 post-info 와 같은 셋)
+const chars = countChars(post.body);
+const minutes = readingMinutes(post, chars);
 ---
 
 <Layout title={title} description={description} ogType="article">
   <div class="post-grid">
     <article class="post-card">
       <header class="post-head">
-        <p class="eyebrow">
-          <FormattedDate date={pubDate} />
-          {categories.map((c) => <a href={categoryHref(c)}>{c}</a>)}
-        </p>
+        <p class="eyebrow">{categories.map((c) => <a href={categoryHref(c)}>{c}</a>)}</p>
         <h1>{title}</h1>
         <p class="lede">{description}</p>
+        <ul class="post-info">
+          <li>
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+              <rect x="3.5" y="5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
+              <path d="M3.5 9.5h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+            작성일: <FormattedDate date={pubDate} />
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+              <path d="M6 3h8l5 5v13H6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+              <path d="M14 3v5h5M9 12h6M9 16h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+            글자 수: <span class="num">{chars.toLocaleString('ko-KR')}</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+              <path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+            읽기 시간: <span class="num">{minutes}</span> 분
+          </li>
+        </ul>
         {cover && <img class="cover" src={cover} alt="" decoding="async" />}
       </header>
 
@@ -192,6 +223,28 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     font-size: var(--text-lg);
     color: var(--fg-muted);
     line-height: 1.55;
+  }
+  /* 정보 줄 — 작성일 · 글자 수 · 읽기 시간 */
+  .post-info {
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
+    color: var(--fg-muted);
+  }
+  .post-info li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+  }
+  .post-info .num {
+    font-variant-numeric: tabular-nums;
   }
   .cover {
     margin-top: 2rem;
