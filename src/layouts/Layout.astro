@@ -164,6 +164,10 @@ function isCurrent(href: string) {
     justify-content: space-between;
     gap: 0.75rem 2rem;
     padding-block: 1.75rem 0.5rem;
+    /* 모든 페이지에서 같은 자리 — hero 페이지의 overlay 헤더와 같은 전폭·좌우 여백(--hero-inset).
+       글 페이지만 .wrap 폭(60rem)이라 헤더가 안쪽으로 밀렸다(2026-09-02 사용자 지적, 레퍼런스는 전 페이지 동일) */
+    max-width: none;
+    padding-inline: var(--hero-inset);
   }
 
   .brand {
