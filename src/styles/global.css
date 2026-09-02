@@ -73,6 +73,14 @@
   --ease: 160ms ease-out;
 
   color-scheme: light dark;
+
+  /* 글 페이지 — 겉 배경(레퍼런스 실측 #f0f4f8) · 흰 카드 · 목차 · 형광펜 */
+  --post-page-bg: #f0f4f8;
+  --post-card-bg: #ffffff;
+  --post-card-shadow: 0 10px 35px 2px rgb(0 0 0 / 0.15), 0 5px 15px rgb(0 0 0 / 0.07),
+    0 2px 5px -5px rgb(0 0 0 / 0.1);
+  --toc-shadow: 0 4px 12px rgb(0 0 0 / 0.08), 0 2px 4px rgb(0 0 0 / 0.05);
+  --mark-hl: rgb(255 158 51 / 0.45);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -106,6 +114,12 @@
     --top-btn-bg: #333d4e;
     --top-btn-bg-hover: #3e4a5f;
     --top-btn-fg: #e6e9ee;
+
+    --post-page-bg: #15181d;
+    --post-card-bg: #1b1c1e;
+    --post-card-shadow: 0 10px 35px 2px rgb(0 0 0 / 0.5), 0 5px 15px rgb(0 0 0 / 0.3);
+    --toc-shadow: 0 4px 12px rgb(0 0 0 / 0.4), 0 2px 4px rgb(0 0 0 / 0.3);
+    --mark-hl: rgb(255 158 51 / 0.28);
   }
 }
 
@@ -440,4 +454,14 @@ ol {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+}
+
+/* ---- 형광펜 강조(글 본문) — 주황, 글자 아래 58%만 칠해 필기 느낌 ---- */
+.prose mark {
+  background: linear-gradient(transparent 42%, var(--mark-hl) 42%);
+  color: inherit;
+  padding: 0 0.08em;
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }

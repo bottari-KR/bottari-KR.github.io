@@ -20,40 +20,61 @@ interface Props {
 }
 
 const { post, newer, older } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const { title, description, pubDate, categories, tags, cover } = post.data;
+// 목차는 h2·h3 만 — 템플릿 절(h2)과 소절(h3)
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
 <Layout title={title} description={description} ogType="article">
-  <article>
-    <header class="post-head">
-      <p class="eyebrow">
-        <FormattedDate date={pubDate} />
-        {categories.map((c) => <a href={categoryHref(c)}>{c}</a>)}
-      </p>
-      <h1>{title}</h1>
-      <p class="lede">{description}</p>
-      {cover && <img class="cover" src={cover} alt="" decoding="async" />}
-    </header>
+  <div class="post-grid">
+    <article class="post-card">
+      <header class="post-head">
+        <p class="eyebrow">
+          <FormattedDate date={pubDate} />
+          {categories.map((c) => <a href={categoryHref(c)}>{c}</a>)}
+        </p>
+        <h1>{title}</h1>
+        <p class="lede">{description}</p>
+        {cover && <img class="cover" src={cover} alt="" decoding="async" />}
+      </header>
 
-    <div class="prose">
-      <Content />
-    </div>
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        tags.length > 0 && (
+          <footer class="post-foot">
+            <ul class="tags">
+              {tags.map((t) => (
+                <li>
+                  <a href={tagHref(t)}>{t}</a>
+                </li>
+              ))}
+            </ul>
+          </footer>
+        )
+      }
+    </article>
 
     {
-      tags.length > 0 && (
-        <footer class="post-foot">
-          <ul class="tags">
-            {tags.map((t) => (
-              <li>
-                <a href={tagHref(t)}>{t}</a>
-              </li>
-            ))}
-          </ul>
-        </footer>
+      toc.length > 0 && (
+        <aside class="toc" aria-label="목차">
+          <nav class="toc-card">
+            <p class="toc-title">목차</p>
+            <ul>
+              {toc.map((h) => (
+                <li class:list={[{ sub: h.depth === 3 }]}>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
       )
     }
-  </article>
+  </div>
 
   {
     (newer || older) && (
@@ -79,9 +100,60 @@ const { title, description, pubDate, categories, tags, cover } = post.data;
   }
 </Layout>
 
+<!-- 목차 스크롤스파이 — 뷰포트 상단 기준 지나간 마지막 표제를 활성화 -->
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc a[href^="#"]'));
+  const pairs: Array<[HTMLElement, HTMLAnchorElement]> = [];
+  for (const a of links) {
+    const el = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+    if (el) pairs.push([el, a]);
+  }
+  let active: HTMLAnchorElement | null = null;
+  const pick = () => {
+    let next: HTMLAnchorElement | null = pairs.length ? pairs[0][1] : null;
+    for (const [el, a] of pairs) {
+      if (el.getBoundingClientRect().top <= 120) next = a;
+      else break;
+    }
+    if (next === active) return;
+    active?.classList.remove('active');
+    active = next;
+    active?.classList.add('active');
+  };
+  if (pairs.length) {
+    addEventListener('scroll', pick, { passive: true });
+    addEventListener('resize', pick, { passive: true });
+    pick();
+  }
+</script>
+
 <style>
+  /* 이 페이지에서만 — 겉 배경(레퍼런스 실측)과 본문 폭 확장 */
+  :global(body) {
+    background: var(--post-page-bg);
+  }
+  :global(main.wrap) {
+    max-width: 76rem;
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 17rem;
+    gap: 2rem;
+    align-items: start;
+    padding-block-start: 2rem;
+  }
+
+  /* 글 카드 — 흰 상자(레퍼런스 실측: 라운드 14px + 3중 그림자) */
+  .post-card {
+    background: var(--post-card-bg);
+    border-radius: 14px;
+    box-shadow: var(--post-card-shadow);
+    padding: 1rem clamp(1.25rem, 4vw, 3rem) 3rem;
+  }
+
   .post-head {
-    padding-block: 3rem 2.5rem;
+    padding-block: 2rem 2.5rem;
     max-width: var(--measure);
   }
   .post-head h1 {
@@ -109,14 +181,61 @@ const { title, description, pubDate, categories, tags, cover } = post.data;
     max-width: var(--measure);
   }
 
+  /* 우측 목차 — 스크롤해도 따라오는 카드 */
+  .toc {
+    position: sticky;
+    top: 2rem;
+    padding-block-start: 1rem;
+  }
+  .toc-card {
+    background: var(--post-card-bg);
+    border-radius: 14px;
+    box-shadow: var(--toc-shadow);
+    padding: 1.1rem 1rem 0.9rem;
+    max-height: calc(100vh - 5rem);
+    overflow: auto;
+  }
+  .toc-title {
+    margin: 0 0 0.6rem;
+    padding: 0 0.6rem 0.6rem;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    border-bottom: 1px solid var(--rule);
+  }
+  .toc-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .toc-card a {
+    display: block;
+    padding: 0.32rem 0.6rem;
+    border-radius: 6px;
+    font-size: var(--text-xs);
+    line-height: 1.45;
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  .toc-card li.sub a {
+    padding-left: 1.5rem;
+  }
+  .toc-card a:hover {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+  }
+  .toc-card a.active {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    font-weight: 600;
+  }
+
   .siblings {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
-    margin-top: 4rem;
+    margin-top: 3rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--rule);
-    max-width: var(--measure);
   }
   .siblings .next {
     text-align: right;
@@ -142,6 +261,16 @@ const { title, description, pubDate, categories, tags, cover } = post.data;
     font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: var(--leading-tight);
+  }
+
+  /* 목차를 놓을 폭이 없으면 숨긴다(레퍼런스와 동일한 처리) */
+  @media (max-width: 64rem) {
+    .post-grid {
+      grid-template-columns: 1fr;
+    }
+    .toc {
+      display: none;
+    }
   }
 
   @media (max-width: 40rem) {
