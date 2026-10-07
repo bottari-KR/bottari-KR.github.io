@@ -15,8 +15,11 @@ export const SITE = {
   tagline: 'Jun Bundle',
   /** 홈 히어로 원 둘레를 도는 문구(사용자 지정) */
   heroArc: 'AI Engineer',
-  /** 검색·공유용 설명(meta description) */
-  description: 'bottari-KR의 개발 기록',
+  /** 검색·공유용 설명(meta description · og:description) — 2026-10-07 사용자 지정("bottari-KR의 개발 기록" 대신 footerLine 과 같은 문구) */
+  description: '나의 기록을 보따리에 담아가다.',
+  /** 링크 공유 카드의 홈 제목(og:title·twitter:title) — 페이지 제목이 없는 홈에서만 쓴다(2026-10-07 사용자 지정).
+   *  탭 제목·og:site_name·푸터 © 는 name 그대로 */
+  shareTitle: '이원준',
   /** 푸터 소개 문구(2026-09-01 사용자 지정) — meta description 과 분리 */
   footerLine: '나의 기록을 보따리에 담아가다.',
   github: 'https://github.com/bottari-KR',

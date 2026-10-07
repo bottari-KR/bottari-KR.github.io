@@ -51,7 +51,7 @@ function isCurrent(href: string) {
     <meta name="theme-color" content="#121314" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:title" content={title ?? SITE.name} />
+    <meta property="og:title" content={title ?? SITE.shareTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="ko_KR" />
@@ -63,7 +63,7 @@ function isCurrent(href: string) {
       <meta property="article:published_time" content={publishedTime.toISOString()} />
     )}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title ?? SITE.name} />
+    <meta name="twitter:title" content={title ?? SITE.shareTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
   </head>
