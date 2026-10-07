@@ -1,14 +1,16 @@
 ---
 // 소개 — 2026-08-28 사용자 지정 레퍼런스(Behance 122104365 둘째 장) 구성: 왼쪽 큰 대문자 헤드라인 + 소개 문단,
 // 오른쪽 이력 목록(NAME/BIRTH/EDUCATION/…), 왼쪽 아래 귀퉁이에 산호색 원. 홈 히어로와 같은 종이(--hero-*) 위에 그린다.
-// 내용은 src/data/profile.ts 에서만 고친다 — 지금은 전부 임시 자리표시.
+// 내용은 src/data/profile.ts 에서만 고친다(2026-10-07 실값 입력). 오른쪽 열의 절 순서·제목은 아래 sections — 빈 배열인 절은 렌더되지 않는다.
 import Layout from '../layouts/Layout.astro';
 import { SITE } from '../site';
 import { PROFILE, ABOUT_HEADLINE, ABOUT_LEDE } from '../data/profile';
 
 const sections = [
-  { key: 'education', label: 'Education', rows: PROFILE.education },
   { key: 'experience', label: 'Experience', rows: PROFILE.experience },
+  { key: 'education', label: 'Education', rows: PROFILE.education },
+  { key: 'projects', label: 'Projects', rows: PROFILE.projects },
+  { key: 'activities', label: 'Activities', rows: PROFILE.activities },
 ] as const;
 ---
 
@@ -188,10 +190,12 @@ const sections = [
   }
   .rows li {
     display: grid;
-    grid-template-columns: 3.25rem 1fr;
+    /* 연도 칸은 그 절에서 가장 긴 표기("2020.03 ~ 2021.11")에 맞춘다 — 절마다 폭이 다를 수 있다 */
+    grid-template-columns: max-content minmax(0, 1fr);
     gap: 0.75rem;
   }
   .year {
+    white-space: nowrap;
     font-variant-numeric: tabular-nums;
     font-weight: 600;
     letter-spacing: 0.02em;
