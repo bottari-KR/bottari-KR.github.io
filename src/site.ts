@@ -6,6 +6,11 @@ export const SITE = {
   /** 홈 버튼 앞 그림 — 사용자가 준 산타 사진(큰 보따리 끄는 산타)에서 배경을 지운 것. scripts/prepare-brand-santa.py 가
    *  내용 해시가 붙은 파일명을 출력한다 — 그림을 바꾸면 여기 경로도 바꾼다(같은 이름으로 덮으면 캐시 때문에 안 바뀌어 보인다) */
   brandMark: '/media/brand-santa-d891fd81.webp',
+  /** 링크 공유 미리보기(og:image) 기본 카드 1200×630 — 홈 히어로(그레인 종이·산호 원·heroArc 곡선·tagline 헤드라인)를 그대로 찍은
+   *  JPEG(2026-10-07 사용자: "JUN BUNDLE 하고 배경"). 내용이 바뀌면 파일명(sha1 8자)도 바꾼다(캐시). 글은 front matter cover 가 있으면
+   *  그것을 우선한다(Layout.astro). 원본·재생성 절차는 scripts/og-card.html 머리 주석 */
+  ogImage: '/media/og-default-6cc98ba9.jpg',
+  ogImageAlt: 'Jun Bundle · AI Engineer',
   /** 홈 히어로 헤드라인(사용자 지정 문구) */
   tagline: 'Jun Bundle',
   /** 홈 히어로 원 둘레를 도는 문구(사용자 지정) */

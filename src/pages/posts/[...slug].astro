@@ -37,7 +37,7 @@ const chars = countChars(post.body);
 const minutes = readingMinutes(post, chars);
 ---
 
-<Layout title={title} description={description} ogType="article">
+<Layout title={title} description={description} ogType="article" image={cover || undefined} publishedTime={pubDate}>
   <div class="post-grid">
     <article class="post-card">
       <header class="post-head">

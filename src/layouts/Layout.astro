@@ -10,9 +10,17 @@ interface Props {
   ogType?: 'website' | 'article';
   /** 첫 화면이 전폭 히어로면 헤더를 그 위에 얹는다(색은 --hero-fg, main 은 wrap 없이 — 페이지가 직접 감싼다) */
   hero?: boolean;
+  /** 공유 미리보기 그림(public/ 기준 절대 경로). 없으면 SITE.ogImage 기본 카드 */
+  image?: string;
+  /** 글이면 작성일 — article:published_time */
+  publishedTime?: Date;
 }
 
-const { title, description = SITE.description, ogType = 'website', hero = false } = Astro.props;
+const { title, description = SITE.description, ogType = 'website', hero = false, image, publishedTime } = Astro.props;
+// 링크 공유 미리보기(카톡·슬랙·디스코드·X) — 크롤러는 절대 URL 만 받으므로 Astro.site 로 푼다. 글 cover 가 없으면 사이트 기본 카드.
+const ogImagePath = image || SITE.ogImage;
+const ogImage = Astro.site ? new URL(ogImagePath, Astro.site).href : ogImagePath;
+const ogImageIsDefault = ogImagePath === SITE.ogImage;
 const fullTitle = title ? `${title} · ${SITE.name}` : SITE.name;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.pathname;
 const path = Astro.url.pathname;
@@ -47,7 +55,17 @@ function isCurrent(href: string) {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="ko_KR" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    {ogImageIsDefault && <meta property="og:image:width" content="1200" />}
+    {ogImageIsDefault && <meta property="og:image:height" content="630" />}
+    <meta property="og:image:alt" content={ogImageIsDefault ? SITE.ogImageAlt : (title ?? SITE.name)} />
+    {ogType === 'article' && publishedTime && (
+      <meta property="article:published_time" content={publishedTime.toISOString()} />
+    )}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title ?? SITE.name} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
   </head>
   <body class:list={[{ 'has-hero': hero }]}>
     <a class="skip" href="#main">본문으로 건너뛰기</a>
