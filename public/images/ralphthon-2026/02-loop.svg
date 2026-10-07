@@ -1,0 +1,65 @@
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="'Pretendard','Malgun Gothic','Apple SD Gothic Neo',sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8a877f"/>
+    </marker>
+  </defs>
+  <rect width="900" height="520" fill="#ffffff"/>
+  <text x="40" y="46" font-size="21" font-weight="700" fill="#21201c">멈출 줄 아는 랄프 루프</text>
+  <text x="40" y="68" font-size="13" fill="#78756d">ralph.sh 가 같은 프롬프트로 에이전트를 다시 부르고, DONE 파일을 보고 멈춘다</text>
+
+  <!-- 1행: 한 바퀴 -->
+  <rect x="40" y="110" width="180" height="76" rx="10" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="130" y="136" font-size="14.5" font-weight="700" fill="#21201c" text-anchor="middle">ralph.sh</text>
+  <text x="130" y="154" font-size="11.5" fill="#78756d" text-anchor="middle">PROMPT.md 한 장 들고</text>
+  <text x="130" y="170" font-size="11.5" fill="#78756d" text-anchor="middle">claude -p 호출</text>
+  <line x1="220" y1="148" x2="258" y2="148" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <rect x="260" y="110" width="220" height="76" rx="10" fill="#f4f4f2" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="370" y="136" font-size="14.5" font-weight="700" fill="#21201c" text-anchor="middle">에이전트 출근</text>
+  <text x="370" y="154" font-size="11.5" fill="#78756d" text-anchor="middle">AGENTS → PRD → PLAN 읽기</text>
+  <text x="370" y="170" font-size="11.5" fill="#78756d" text-anchor="middle">git log · npm test 로 현재 상태</text>
+  <line x1="480" y1="148" x2="518" y2="148" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <rect x="520" y="110" width="170" height="76" rx="10" fill="#f4f4f2" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="605" y="136" font-size="14.5" font-weight="700" fill="#21201c" text-anchor="middle">미완 항목 하나 구현</text>
+  <text x="605" y="154" font-size="11.5" fill="#78756d" text-anchor="middle">PLAN.md 의 첫 빈칸</text>
+  <text x="605" y="170" font-size="11.5" fill="#78756d" text-anchor="middle">하나만</text>
+  <line x1="690" y1="148" x2="728" y2="148" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <rect x="730" y="110" width="140" height="76" rx="10" fill="#f4f4f2" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="800" y="136" font-size="14.5" font-weight="700" fill="#21201c" text-anchor="middle">검증 통과</text>
+  <text x="800" y="154" font-size="11.5" fill="#78756d" text-anchor="middle">체크박스 · 진행 로그</text>
+  <text x="800" y="170" font-size="11.5" fill="#78756d" text-anchor="middle">git commit</text>
+
+  <!-- 검증 → 완료 판정 -->
+  <path d="M800 186 V218 H735 V248" fill="none" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <!-- 2행: 완료 판정 -->
+  <rect x="600" y="250" width="270" height="64" rx="10" fill="#ffffff" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="735" y="276" font-size="14" font-weight="700" fill="#21201c" text-anchor="middle">23칸 전부 체크 · 테스트 10/10?</text>
+  <text x="735" y="296" font-size="11.5" fill="#78756d" text-anchor="middle">완료 조건이 곧 멈춤 조건</text>
+
+  <!-- 아니오: 다음 항목 -->
+  <path d="M640 250 V218 H605 V188" fill="none" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+  <text x="630" y="238" font-size="11.5" fill="#78756d" text-anchor="end">아직 남았으면 다음 항목</text>
+
+  <!-- 예: DONE -->
+  <line x1="600" y1="282" x2="552" y2="282" stroke="#8a877f" stroke-width="1.5" marker-end="url(#ar)"/>
+  <text x="576" y="274" font-size="11.5" fill="#78756d" text-anchor="middle">예</text>
+  <rect x="300" y="250" width="250" height="64" rx="10" fill="#0e7a5f"/>
+  <text x="425" y="276" font-size="14.5" font-weight="700" fill="#ffffff" text-anchor="middle">DONE 파일 쓰고 종료</text>
+  <text x="425" y="296" font-size="11.5" fill="#d3ece3" text-anchor="middle">ralph.sh 가 DONE 을 보고 루프 종료</text>
+
+  <!-- DONE 없이 나오면 재호출 -->
+  <path d="M130 380 V188" fill="none" stroke="#8a877f" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+  <text x="142" y="290" font-size="11.5" fill="#78756d">DONE 없이 나오면</text>
+  <text x="142" y="306" font-size="11.5" fill="#78756d">5초 뒤 같은 프롬프트로 재호출</text>
+
+  <!-- 장치 -->
+  <rect x="40" y="380" width="830" height="110" rx="10" fill="#f4f4f2" stroke="#d8d6d0" stroke-width="1.5"/>
+  <text x="60" y="406" font-size="13.5" font-weight="700" fill="#21201c">거짓 완료와 무한 루프를 막은 장치</text>
+  <text x="60" y="428" font-size="12.5" fill="#57544c">· 테스트 10개는 사람이 미리 썼고 에이전트는 수정 금지 — 테스트를 고쳐서 통과시키는 길을 막았다</text>
+  <text x="60" y="448" font-size="12.5" fill="#57544c">· 멈춤 조건 세 겹 — DONE 파일 · 시간(14:30 마감 프롬프트, 14:40 재호출 금지, 14:48 강제 종료) · 최대 10회</text>
+  <text x="60" y="468" font-size="12.5" fill="#57544c">· 상태는 머릿속이 아니라 PLAN.md 체크박스와 git 커밋에 — 중간에 죽어도 다음 반복이 끊긴 자리부터 이어간다</text>
+</svg>
