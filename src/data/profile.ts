@@ -42,7 +42,7 @@ export const PROFILE = {
   certification: ['전자기기기능사 (2021)', '전자기기생산 L2 (2021)', '전자기기하드웨어개발 L3 (2023)'],
 
   // 보유 기술
-  skills: ['전기·전자·통신 설계', 'Ansys HFSS', 'SOLIDWORKS', 'Python', 'AI 에이전트 개발'],
+  skills: ['전기·전자·통신 설계', 'Ansys HFSS', 'SOLIDWORKS', 'Python', 'TypeScript', 'Next.js', 'AI 에이전트 개발'],
 } as const;
 
 // 왼쪽 열 — 헤드라인(줄마다 하나)과 소개 문단. 2026-08-28 사용자 확정 문구.
