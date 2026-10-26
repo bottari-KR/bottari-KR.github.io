@@ -48,5 +48,5 @@ Omarchy로 넘어갔다. 타이핑부터 빨라진 게 말이 안 됐다. 처음
 
 초기화가 무서워서 미루던 걸 듀얼부팅 하나로 넘었다. 돌아갈 길이 있으면 새로운 걸 써 보는 데 망설일 이유가 없다. 그리고 윈도우에서 느리다고 느끼던 게 컴퓨터 탓이 아니라 OS 탓일 수 있다는 걸 몸으로 알았다.
 
-> 완벽이란 더 보탤 것이 없을 때가 아니라 더 뺄 것이 없을 때 이루어진다.
-> — 앙투안 드 생텍쥐페리, 『인간의 대지』
+> Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
+> — Antoine de Saint-Exupéry, *Wind, Sand and Stars*
