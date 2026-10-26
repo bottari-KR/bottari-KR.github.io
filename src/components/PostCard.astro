@@ -2,7 +2,7 @@
 // 글 카드 — 2026-10-26 사용자 결정: "루비님같은 느낌으로 똑같이". ruby-kim.github.io(Hexo Matery + my.css) 카드를 실측해 옮겼다.
 // 위 = 커버 그림 220px + 아래로 어두워지는 그러데이션 + 그 위에 카테고리(책갈피·이모지)와 제목(2줄 자름).
 // 아래 = 요약 2줄 · 날짜(시계) · 파란 태그 칩. hover = 카드 5px 떠오름 + 그림 1.04배.
-// 등장 모션 = AOS zoom-in 과 같은 규칙(아래 <script>·.item 스타일). 커버가 없으면 사이트 기본 공유 카드(SITE.ogImage).
+// 등장 모션 = global.css [data-reveal="zoom-in"](AOS zoom-in 과 같은 규칙, 감시는 Layout.astro). 커버가 없으면 사이트 기본 공유 카드(SITE.ogImage).
 import { tagHref } from '../lib/posts';
 import { SITE, CATEGORY_EMOJI, type Category } from '../site';
 
@@ -24,7 +24,7 @@ const iso = pubDate.toISOString().slice(0, 10);
 const label = categories.map((c) => `${CATEGORY_EMOJI[c as Category] ?? ''} ${c}`.trim()).join(' · ');
 ---
 
-<div class="item" data-reveal>
+<div class="item" data-reveal="zoom-in">
   <article class="card">
     <a class="img-link" href={href}>
       <div class="img-wrap">
@@ -65,51 +65,8 @@ const label = categories.map((c) => `${CATEGORY_EMOJI[c as Category] ?? ''} ${c}
   </article>
 </div>
 
-<script>
-  // ruby-kim 홈의 AOS(zoom-in · once:false · mirror:false · offset 120) 와 같은 규칙 —
-  // 카드 위쪽이 화면 아래 120px 선을 넘어 들어오면 나타나고, 다시 그 선 아래로 내려가면(위로 스크롤) 숨겨져 다음에 또 나타난다.
-  // 지나쳐 위로 올라간 카드는 그대로 둔다. 움직임 줄이기 설정이면 처음부터 다 보인다.
-  const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (items.length > 0 && !reduce && 'IntersectionObserver' in window) {
-    const OFFSET = 120;
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) e.target.classList.add('in');
-          else if (e.boundingClientRect.top > innerHeight - OFFSET) e.target.classList.remove('in');
-        }
-      },
-      { rootMargin: `0px 0px -${OFFSET}px 0px` },
-    );
-    items.forEach((el) => io.observe(el));
-  } else {
-    items.forEach((el) => el.classList.add('in'));
-  }
-</script>
-
 <style>
-  /* 등장 모션 — AOS zoom-in 실측: scale(.6)·opacity 0 → 1, 700ms, 나타날 때만 100ms 지연, ease-in-out-sine.
-     JS 가 도는 문서(html.js)에서만 처음에 숨긴다. hover 변형은 안쪽 .card 라 서로 안 겹친다 */
-  :global(html.js) .item {
-    opacity: 0;
-    transform: scale(0.6);
-    transition-property: opacity, transform;
-    transition-duration: 0.7s;
-    transition-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
-  }
-  :global(html.js) .item.in {
-    opacity: 1;
-    transform: none;
-    transition-delay: 0.1s;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    :global(html.js) .item {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
+  /* 등장 모션(zoom-in)은 global.css [data-reveal] + Layout.astro script — 바깥 .item 에 걸려 안쪽 .card 의 hover 변형과 안 겹친다 */
   .card {
     display: flex;
     flex-direction: column;

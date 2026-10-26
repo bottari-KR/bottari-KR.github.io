@@ -329,6 +329,42 @@ ol {
   align-items: stretch;
 }
 
+/* 등장 모션 — ruby-kim(AOS) 실측값: 700ms · 나타날 때만 100ms 지연 · ease-in-out-sine · 화면 아래 120px 선에서 발동 · 위로 되감기
+   (감시는 Layout.astro 의 script). 효과는 data-reveal 값으로 고른다 — zoom-in(카드) · fade-up(글 블록·행) · zoom-in-up(소개 항목).
+   JS 가 도는 문서(html.js)에서만 처음에 숨긴다 — JS 없으면 그냥 보인다. 2026-10-26 사용자: "모든 곳 다 루비님 모션" */
+html.js [data-reveal] {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-duration: 0.7s;
+  transition-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+html.js [data-reveal="zoom-in"] {
+  transform: scale(0.6);
+}
+html.js [data-reveal="fade-up"] {
+  transform: translateY(100px);
+}
+html.js [data-reveal="zoom-in-up"] {
+  transform: translateY(100px) scale(0.6);
+}
+html.js [data-reveal="zoom-in-left"] {
+  transform: translateX(100px) scale(0.6);
+}
+html.js [data-reveal="zoom-in-right"] {
+  transform: translateX(-100px) scale(0.6);
+}
+html.js [data-reveal].in {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.1s;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* 빈 상태 */
 .empty {
   padding-block: 4rem;

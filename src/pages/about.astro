@@ -22,7 +22,7 @@ const sections = [
     </picture>
 
     <div class="cols">
-      <div class="intro">
+      <div class="intro" data-reveal="fade-up">
         <h1 id="about-title">
           {ABOUT_HEADLINE.map((line, i) => (
             <>
@@ -35,11 +35,11 @@ const sections = [
       </div>
 
       <dl class="facts">
-        <div class="fact">
+        <div class="fact" data-reveal="zoom-in-up">
           <dt>Name</dt>
           <dd>{PROFILE.name}</dd>
         </div>
-        <div class="fact">
+        <div class="fact" data-reveal="zoom-in-up">
           <dt>Birth</dt>
           <dd>{PROFILE.birth}</dd>
         </div>
@@ -47,7 +47,7 @@ const sections = [
           sections.map(
             (s) =>
               s.rows.length > 0 && (
-                <div class="fact">
+                <div class="fact" data-reveal="zoom-in-up">
                   <dt>{s.label}</dt>
                   <dd>
                     <ul class="rows">
@@ -65,7 +65,7 @@ const sections = [
         }
         {
           PROFILE.certification.length > 0 && (
-            <div class="fact">
+            <div class="fact" data-reveal="zoom-in-up">
               <dt>Certification</dt>
               <dd>
                 <ul class="dots">
@@ -79,7 +79,7 @@ const sections = [
         }
         {
           PROFILE.skills.length > 0 && (
-            <div class="fact">
+            <div class="fact" data-reveal="zoom-in-up">
               <dt>Skills</dt>
               <dd>
                 <ul class="chips">

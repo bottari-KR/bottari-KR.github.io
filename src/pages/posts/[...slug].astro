@@ -128,7 +128,7 @@ const minutes = readingMinutes(post, chars);
 
   {
     (newer || older) && (
-      <nav class="siblings" aria-label="이웃 글">
+      <nav class="siblings" aria-label="이웃 글" data-reveal="fade-up">
         <div>
           {older && (
             <a href={postHref(older)} rel="prev">

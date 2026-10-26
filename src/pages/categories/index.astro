@@ -18,7 +18,7 @@ const categories = countCategories(posts).map(({ name, count }) => {
     <ul class="rows">
       {
         categories.map(({ name, count, tags, latest }) => (
-          <li class="row">
+          <li class="row" data-reveal="fade-up">
             <div class="head">
               <a class="name" href={categoryHref(name)}>
                 <span class="cat-emoji" aria-hidden="true">{CATEGORY_EMOJI[name as Category]}</span>

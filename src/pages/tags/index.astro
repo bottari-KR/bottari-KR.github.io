@@ -20,7 +20,7 @@ const tags = countTags(posts).map(({ name, count }) => ({
       ) : (
         <ul class="grid">
           {tags.map(({ name, count, latest }) => (
-            <li class="tile">
+            <li class="tile" data-reveal="zoom-in">
               <a class="tile-link" href={tagHref(name)}>
                 <span class="count">{count}</span>
                 <span class="name">{name}</span>

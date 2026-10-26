@@ -10,7 +10,7 @@ import { CONTACT } from '../data/contact';
 
 <Layout title="문의" description={`${SITE.name} 연락처`} hero>
   <ListShell title="문의" sub="글 오류 · 깨진 링크 제보" width="narrow" flock="contact">
-    <dl class="meta">
+    <dl class="meta" data-reveal="fade-up">
       <div>
         <dt>운영자</dt>
         <dd>{CONTACT.owner}</dd>
@@ -24,7 +24,7 @@ import { CONTACT } from '../data/contact';
     <ul class="cards">
       {
         CONTACT.channels.map((ch) => (
-          <li>
+          <li data-reveal="zoom-in">
             {ch.href ? (
               <a class="card" href={ch.href} rel="me">
                 <span class="ico">
@@ -54,7 +54,7 @@ import { CONTACT } from '../data/contact';
     <div class="sections">
       {
         CONTACT.sections.map((s) => (
-          <section>
+          <section data-reveal="fade-up">
             <h2>{s.heading}</h2>
             {s.body.map((line) => (
               <p>{line}</p>

@@ -142,6 +142,37 @@ function isCurrent(href: string) {
       </svg>
     </button>
     <script>
+      // 등장 모션 — ruby-kim 의 AOS(once:false · mirror:false · offset 120) 와 같은 규칙: 요소 위쪽이 화면 아래 120px 선을 넘어
+      // 들어오면 .in, 다시 그 선 아래로 내려가면(위로 스크롤) 빼서 다음에 또 나타난다. 지나쳐 위로 올라간 것은 그대로.
+      // 안전장치(AOS 에는 없다): 문서가 스크롤이 안 되거나 끝까지 내려갔으면 남은 것도 다 보인다 — 화면 아래 120px 안에 걸린
+      // 요소가 영영 안 보이는 일을 막는다. 효과·시간은 global.css [data-reveal].
+      const items = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+      if (items.length > 0) {
+        const showAll = () => items.forEach((el) => el.classList.add('in'));
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+          showAll();
+        } else {
+          const OFFSET = 120;
+          const io = new IntersectionObserver(
+            (entries) => {
+              for (const e of entries) {
+                if (e.isIntersecting) e.target.classList.add('in');
+                else if (e.boundingClientRect.top > innerHeight - OFFSET) e.target.classList.remove('in');
+              }
+            },
+            { rootMargin: `0px 0px -${OFFSET}px 0px` },
+          );
+          items.forEach((el) => io.observe(el));
+          const atEnd = () => {
+            const d = document.documentElement;
+            if (d.scrollHeight <= innerHeight + 2 || scrollY + innerHeight >= d.scrollHeight - 2) showAll();
+          };
+          atEnd();
+          addEventListener('scroll', atEnd, { passive: true });
+          addEventListener('resize', atEnd);
+        }
+      }
+
       const btn = document.querySelector<HTMLButtonElement>('.to-top');
       if (btn) {
         const sync = () => {

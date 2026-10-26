@@ -41,7 +41,7 @@ const mmdd = (d: Date) => d.toISOString().slice(5, 10).replace('-', '.');
 
           <div class="body">
             {years.map(({ year, posts }) => (
-              <section class="year" id={`y${year}`} aria-labelledby={`y${year}-h`}>
+              <section class="year" id={`y${year}`} aria-labelledby={`y${year}-h`} data-reveal="fade-up">
                 <h2 id={`y${year}-h`}>
                   {year} <span class="n">{posts.length}편</span>
                 </h2>
