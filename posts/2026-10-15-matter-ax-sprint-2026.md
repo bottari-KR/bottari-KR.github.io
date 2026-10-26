@@ -4,7 +4,7 @@ description: "부품은 본선 전날에야 왔고 온도 센서는 발표 직�
 pubDate: 2026-10-26
 categories: ["Retrospect"]
 tags: ["hackathon", "matter", "thread", "nordic", "on-device-ai"]
-cover: ""
+cover: "/images/matter-ax-sprint-2026/cover.webp"
 draft: false
 ---
 

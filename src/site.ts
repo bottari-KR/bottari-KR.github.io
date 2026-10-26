@@ -24,7 +24,7 @@ export const SITE = {
   footerLine: '나의 기록을 보따리에 담아가다.',
   github: 'https://github.com/bottari-KR',
   lang: 'ko',
-  pageSize: 10,
+  pageSize: 9, // 3열 × 3줄 — ruby-kim 홈과 같게(2026-10-26)
 } as const;
 
 // 카테고리 — 코드 쪽 정본. 순서가 곧 표시 순서. src/content.config.ts 의 enum 이 이 배열을 쓴다.

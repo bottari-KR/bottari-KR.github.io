@@ -4,7 +4,7 @@ description: "2주 만에 만든 중대재해처벌법 에이전트, 전화 200�
 pubDate: 2026-09-01
 categories: ["Projects"]
 tags: ["langgraph", "rag", "fastapi", "react"]
-cover: ""
+cover: "/images/safety-guardian/cover.webp"
 draft: false
 readingMinutes: 10
 ---

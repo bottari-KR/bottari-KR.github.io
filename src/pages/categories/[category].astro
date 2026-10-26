@@ -32,7 +32,7 @@ const emoji = CATEGORY_EMOJI[category as Category];
       posts.length === 0 ? (
         <p class="empty">이 카테고리에는 아직 글이 없습니다.</p>
       ) : (
-        <section aria-label={`${category} 글 목록`}>
+        <section aria-label={`${category} 글 목록`} class="card-grid">
           {posts.map((post) => (
             <PostCard
               href={postHref(post)}
@@ -54,6 +54,7 @@ const emoji = CATEGORY_EMOJI[category as Category];
   .crumb {
     font-size: var(--text-sm);
     color: var(--fg-muted);
+    margin-bottom: 1.5rem;
   }
   .empty {
     padding-block: 2rem 1rem;

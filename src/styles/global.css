@@ -81,6 +81,20 @@
     0 2px 5px -5px rgb(0 0 0 / 0.1);
   --toc-shadow: 0 4px 12px rgb(0 0 0 / 0.08), 0 2px 4px rgb(0 0 0 / 0.05);
   --mark-hl: rgb(255 158 51 / 0.45);
+
+  /* 목록 카드 격자(홈·카테고리·태그) — 2026-10-26 사용자: "루비님같은 느낌으로 똑같이". ruby-kim 카드 실측값:
+     겉 배경 #f0f4f8 · 흰 카드 r14 · 그림 220px · 요약 #64748b · 날짜 #94a3b8 · 태그 칩 #5d92ca 흰 글자 */
+  --list-bg: #f0f4f8;
+  --card-bg: #ffffff;
+  --card-border: rgb(0 0 0 / 0.04);
+  --card-shadow: 0 1px 3px rgb(0 0 0 / 0.07), 0 1px 2px rgb(0 0 0 / 0.05);
+  --card-shadow-hover: 0 10px 25px rgb(0 0 0 / 0.1), 0 4px 8px rgb(0 0 0 / 0.06);
+  --card-img-bg: #1a2535;
+  --card-summary: #64748b;
+  --card-date: #94a3b8;
+  --chip-bg: #5d92ca;
+  --chip-fg: #ffffff;
+  --pg-border: #e2e8f0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -118,6 +132,18 @@
     --post-page-bg: #15181d;
     --post-card-bg: #1b1c1e;
     --post-card-shadow: 0 10px 35px 2px rgb(0 0 0 / 0.5), 0 5px 15px rgb(0 0 0 / 0.3);
+
+    --list-bg: #15181d;
+    --card-bg: #1b1c1e;
+    --card-border: rgb(255 255 255 / 0.06);
+    --card-shadow: 0 1px 3px rgb(0 0 0 / 0.4), 0 1px 2px rgb(0 0 0 / 0.3);
+    --card-shadow-hover: 0 10px 25px rgb(0 0 0 / 0.5), 0 4px 8px rgb(0 0 0 / 0.35);
+    --card-img-bg: #10151d;
+    --card-summary: #a2a29e;
+    --card-date: #8a8a87;
+    --chip-bg: #3f6aa0;
+    --chip-fg: #eef2f8;
+    --pg-border: #2e3a4d;
     --toc-shadow: 0 4px 12px rgb(0 0 0 / 0.4), 0 2px 4px rgb(0 0 0 / 0.3);
     --mark-hl: rgb(255 158 51 / 0.28);
   }
@@ -293,6 +319,14 @@ ol {
 .tags a::before {
   content: "#";
   color: var(--fg-faint);
+}
+
+/* 글 카드 격자 — ruby-kim 홈(3열, 간격 24px)과 같은 모양. 셀 폭이 19rem 이상이면 열을 늘린다(72rem 안에서 3열, 폰 1열) */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
 /* 빈 상태 */

@@ -1,4 +1,5 @@
 ---
+// 쪽 이동 — ruby-kim 홈 .paging 과 같은 모양: 가운데 「이전 | 1 / 7 | 다음」 흰 버튼(44px, r8), 없는 쪽은 흐리게(2026-10-26).
 interface Props {
   current: number;
   last: number;
@@ -13,21 +14,29 @@ const { current, last, prev, next } = Astro.props;
   last > 1 && (
     <nav class="pagination" aria-label="페이지 이동">
       {prev ? (
-        <a href={prev} rel="prev">
-          ← 이전
+        <a class="btn" href={prev} rel="prev">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          이전
         </a>
       ) : (
-        <span aria-hidden="true">← 이전</span>
+        <span class="btn off" aria-hidden="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          이전
+        </span>
       )}
       <span class="count">
         {current} / {last}
       </span>
       {next ? (
-        <a href={next} rel="next">
-          다음 →
+        <a class="btn" href={next} rel="next">
+          다음
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
         </a>
       ) : (
-        <span aria-hidden="true">다음 →</span>
+        <span class="btn off" aria-hidden="true">
+          다음
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </span>
       )}
     </nav>
   )
@@ -36,18 +45,47 @@ const { current, last, prev, next } = Astro.props;
 <style>
   .pagination {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    padding-block: 2rem;
-    font-size: var(--text-sm);
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 2rem;
   }
-  .pagination > span:not(.count) {
-    color: var(--fg-faint);
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 44px;
+    padding: 0 22px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    background: var(--card-bg);
+    color: var(--fg);
+    border: 1px solid var(--pg-border);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+    transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+  }
+  .btn svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+  a.btn:hover {
+    border-color: var(--chip-bg);
+    color: var(--chip-bg);
+    box-shadow: var(--card-shadow);
+    text-decoration: none;
+  }
+  .btn.off {
+    opacity: 0.3;
+    pointer-events: none;
   }
   .count {
-    font-family: var(--font-mono);
+    min-width: 48px;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
-    color: var(--fg-muted);
+    color: var(--card-date);
   }
 </style>

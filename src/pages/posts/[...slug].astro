@@ -37,6 +37,7 @@ const chars = countChars(post.body);
 const minutes = readingMinutes(post, chars);
 ---
 
+{/* cover 는 목록 카드 미리보기와 공유 카드(og:image)에만 쓴다 — 글 머리에는 안 보인다(본문 그림과 겹쳐서, 2026-10-26) */}
 <Layout title={title} description={description} ogType="article" image={cover || undefined} publishedTime={pubDate}>
   <div class="post-grid">
     <article class="post-card">
@@ -67,7 +68,6 @@ const minutes = readingMinutes(post, chars);
             읽기 시간: <span class="num">{minutes}</span> 분
           </li>
         </ul>
-        {cover && <img class="cover" src={cover} alt="" decoding="async" />}
       </header>
 
       <div class="prose">
@@ -253,14 +253,6 @@ const minutes = readingMinutes(post, chars);
     letter-spacing: inherit;
     font-variant-numeric: tabular-nums;
     color: var(--fg);
-  }
-  .cover {
-    margin-top: 2rem;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: var(--radius);
-    background: var(--surface);
   }
   .post-foot {
     margin-top: 3rem;

@@ -4,7 +4,7 @@ description: "윈도우가 병목이었다. 듀얼부팅이 된다길래 깔았�
 pubDate: 2026-08-30
 categories: ["Notes"]
 tags: ["omarchy", "arch-linux", "dual-boot", "hyprland", "systemd"]
-cover: ""
+cover: "/images/omarchy-switch/cover.webp"
 draft: false
 ---
 

@@ -2,12 +2,14 @@
 import type { GetStaticPaths, Page } from 'astro';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
+import ListShell from '../components/ListShell.astro';
 import PostCard from '../components/PostCard.astro';
 import Pagination from '../components/Pagination.astro';
 import { SITE } from '../site';
 import { getPublishedPosts, postHref, type Post } from '../lib/posts';
 
-// 홈 = 히어로(헤드라인) + 글 카드 목록. `/` 가 1쪽, `/2/` `/3/` … 이 다음 쪽(2쪽부터는 히어로 없이 목록만).
+// 홈 = 히어로(헤드라인) + 글 카드 격자(2026-10-26 ruby-kim 홈과 같은 3열 카드 + 등장 모션). `/` 가 1쪽, `/2/` `/3/` … 은
+// 히어로 없이 목록 페이지 틀(ListShell)에 같은 격자.
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = await getPublishedPosts();
   return paginate(posts, { pageSize: SITE.pageSize });
@@ -22,17 +24,44 @@ const first = page.currentPage === 1;
 const title = first ? undefined : `${page.currentPage}쪽`;
 ---
 
-<Layout title={title} hero={first}>
-  {first ? <Hero /> : <h1 class="sr-only">{SITE.description}</h1>}
-
-  {/* 1쪽은 히어로가 전폭이라 main 에 wrap 이 없다 — 목록만 여기서 감싼다 */}
-  <div class:list={[{ 'after-hero': first, wrap: first }]}>
-    {
-      page.data.length === 0 ? (
-        <p class="empty" id="posts">아직 올린 글이 없습니다.</p>
-      ) : (
-        <section aria-labelledby="posts-heading" class="home-list" id="posts">
-          {first ? <h2 class="eyebrow list-heading" id="posts-heading">최근 글</h2> : <h2 class="sr-only" id="posts-heading">글 목록</h2>}
+<Layout title={title} hero>
+  {
+    first ? (
+      <>
+        <Hero />
+        {/* 히어로 아래 띠 — ruby-kim 홈처럼 연한 회청색 바탕(--list-bg) 위에 카드 격자. 헤더는 히어로 위에 얹혀 있어 여기엔 없다 */}
+        <div class="band">
+          <div class="band-wrap">
+            {page.data.length === 0 ? (
+              <p class="empty" id="posts">
+                아직 올린 글이 없습니다.
+              </p>
+            ) : (
+              <section aria-labelledby="posts-heading" class="card-grid" id="posts">
+                <h2 class="sr-only" id="posts-heading">
+                  최근 글
+                </h2>
+                {page.data.map((post) => (
+                  <PostCard
+                    href={postHref(post)}
+                    title={post.data.title}
+                    description={post.data.description}
+                    pubDate={post.data.pubDate}
+                    categories={post.data.categories}
+                    tags={post.data.tags}
+                    cover={post.data.cover}
+                    headingLevel="h3"
+                  />
+                ))}
+              </section>
+            )}
+            <Pagination current={page.currentPage} last={page.lastPage} prev={page.url.prev} next={page.url.next} />
+          </div>
+        </div>
+      </>
+    ) : (
+      <ListShell title="글 목록" sub={`${page.currentPage} / ${page.lastPage}쪽`} flock="archive">
+        <section aria-label="글 목록" class="card-grid">
           {page.data.map((post) => (
             <PostCard
               href={postHref(post)}
@@ -42,40 +71,30 @@ const title = first ? undefined : `${page.currentPage}쪽`;
               categories={post.data.categories}
               tags={post.data.tags}
               cover={post.data.cover}
-              headingLevel="h3"
             />
           ))}
         </section>
-      )
-    }
-
-    <Pagination current={page.currentPage} last={page.lastPage} prev={page.url.prev} next={page.url.next} />
-  </div>
+        <Pagination current={page.currentPage} last={page.lastPage} prev={page.url.prev} next={page.url.next} />
+      </ListShell>
+    )
+  }
 </Layout>
 
 <style>
-  .home-list {
-    padding-top: 1rem;
-    border-top: 1px solid var(--rule);
-    margin-top: 1.5rem;
+  .band {
+    background: var(--list-bg);
+    padding-block: 2.5rem 3rem;
   }
-  .after-hero .home-list {
-    border-top: 0;
-    margin-top: 0;
-    padding-top: 1rem;
+  .band-wrap {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
   }
-  .after-hero .empty,
-  .after-hero .home-list {
+  #posts {
     scroll-margin-top: 2rem;
   }
-  .list-heading {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--rule);
+  .empty {
+    padding-block: 2rem;
+    text-align: center;
   }
 </style>

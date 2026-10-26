@@ -1,0 +1,49 @@
+<!--
+  글 카드 커버(목록 카드 미리보기 + 공유 og:image) 원본 — 1600×900. 사진이 없는 글에 쓴다.
+  홈 히어로와 같은 종이(그레인) + 산호색 원 위에 글의 핵심 기술 이름 한 단어를 왼쪽 위에 크게 — 카드에서는 아래 40%가
+  제목 그러데이션에 덮이므로 단어는 위에 둔다. 사진이 있는 글은 이 파일 대신 그 사진을 1600×900 으로 잘라 쓴다(magick).
+  찍는 법(서체·원 이미지를 사이트 public/ 에서 받아야 해서 정적 서버를 띄운다):
+    1. public/ 을 루트로 서빙하고 이 파일을 /_cover.html 로 같이 서빙한다(예: 세션 스크래치의 node 정적 서버).
+    2. Playwright(chromium, viewport 1600×900, document.fonts.ready 대기)로 /_cover.html?word=LangGraph 를 PNG 로 찍는다.
+    3. magick 으로 WebP(q85) 변환 → public/images/<글 slug>/cover.webp. 글 front matter cover: "/images/<글 slug>/cover.webp".
+  단어는 쿼리 ?word= 로 받는다(기본 "Jun Bundle"). 2026-10-26 홈 카드 격자(ruby-kim 참고) 도입 때 만들었다.
+-->
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+<style>
+  :root { --hero-bg: #efefef; --hero-fg: #2b2b29; --font: 'Pretendard Variable', Pretendard, system-ui, sans-serif; }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1600px; height: 900px; overflow: hidden; }
+  body { font-family: var(--font); background: var(--hero-bg); color: var(--hero-fg); }
+  .cover { position: relative; width: 1600px; height: 900px; overflow: hidden; isolation: isolate; --blob: 980px; --blob-x: 76%; --blob-y: 58%; }
+  /* 종이 그레인 — 사이트 global.css .grain::after 와 같은 타일 */
+  .cover::after {
+    content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 240px 240px; mix-blend-mode: multiply; opacity: 0.18;
+  }
+  .blob { position: absolute; z-index: 1; left: var(--blob-x); top: var(--blob-y); width: var(--blob); height: auto; translate: -50% -50%; }
+  .word { position: absolute; z-index: 4; left: 88px; top: 96px; right: 88px; font-size: 220px; font-weight: 800; letter-spacing: -0.045em; line-height: 0.95; white-space: nowrap; }
+</style>
+</head>
+<body>
+<section class="cover">
+  <img class="blob" src="/media/hero-blob.webp" alt="">
+  <h1 class="word" id="word">Jun Bundle</h1>
+</section>
+<script>
+  const word = new URLSearchParams(location.search).get('word');
+  const el = document.getElementById('word');
+  if (word) el.textContent = word;
+  // 긴 단어는 폭(1600 − 양쪽 88px)에 들어올 때까지 줄인다
+  document.fonts.ready.then(() => {
+    let size = 220;
+    while (el.scrollWidth > 1600 - 176 && size > 80) { size -= 8; el.style.fontSize = size + 'px'; }
+    document.documentElement.dataset.ready = '1';
+  });
+</script>
+</body>
+</html>

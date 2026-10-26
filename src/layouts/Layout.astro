@@ -39,6 +39,8 @@ function isCurrent(href: string) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    {/* JS 가 도는 문서 표식 — 목록 카드 등장 모션(PostCard.astro)은 html.js 일 때만 처음에 숨긴다. JS 없으면 그냥 보인다 */}
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
