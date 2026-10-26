@@ -1,6 +1,6 @@
 ---
-title: "Matter AX Sprint 해커톤 참여기 — 모유 지킴이로 첫 수상"
-description: "협회에서 빌려준 Nordic 킷으로 유축 모유 팩을 하나하나 판정하는 Matter 센서 노드랑 로컬 허브를 만들었다. 부품은 본선 전날에야 왔고 온도 센서는 발표 직전에 살아났는데, 기대도 안 했던 해커톤 첫 수상을 했다."
+title: "Matter over Thread + 온디바이스 Gemma로 만든 유축 모유 팩 판정기 — Matter AX Sprint 해커톤"
+description: "부품은 본선 전날에야 왔고 온도 센서는 발표 직전에 살아났는데, 기대도 안 했던 첫 수상을 했다."
 pubDate: 2026-10-26
 categories: ["Retrospect"]
 tags: ["hackathon", "matter", "thread", "nordic", "on-device-ai"]
