@@ -1,6 +1,6 @@
 ---
-title: "세이프티 가디언 — 2주 동안 법률 AI 에이전트 개발기!"
-description: "중대재해처벌법이 요구하는 의무 16개를 문서와 대조해 빈틈을 보여주고 소명자료 초안까지 뽑아주는 서비스를 5명이 2주 만에 만들었다. 검증 전화 200통과 비용 1/30의 기록."
+title: "LangGraph로 만든 중대재해처벌법 문서 점검 에이전트 — 인사교 프로젝트"
+description: "2주 만에 만든 중대재해처벌법 에이전트, 전화 200통"
 pubDate: 2026-09-01
 categories: ["Projects"]
 tags: ["langgraph", "rag", "fastapi", "react"]
