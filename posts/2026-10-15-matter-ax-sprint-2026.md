@@ -5,7 +5,7 @@ pubDate: 2026-10-26
 categories: ["Retrospect"]
 tags: ["hackathon", "matter", "thread", "nordic", "on-device-ai"]
 cover: ""
-draft: true
+draft: false
 ---
 
 ## 왜 (문제·동기)
