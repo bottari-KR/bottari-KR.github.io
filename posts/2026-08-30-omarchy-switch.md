@@ -5,7 +5,7 @@ pubDate: 2026-08-30
 categories: ["Notes"]
 tags: ["omarchy", "arch-linux", "dual-boot", "hyprland", "systemd"]
 cover: ""
-draft: true
+draft: false
 ---
 
 ## 왜 (문제·동기)
