@@ -1,5 +1,5 @@
 ---
-title: "Omarchy 4 듀얼부팅으로 윈도우에서 아치 리눅스로 갈아타기 — 개발 환경 이사"
+title: "윈도우를 병목으로 판정하고 Omarchy로 갈아타기"
 description: "윈도우가 병목이었다. 듀얼부팅이 된다길래 깔았고, 타이핑부터 빨라졌다."
 pubDate: 2026-08-30
 categories: ["Notes"]
