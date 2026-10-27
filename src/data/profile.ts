@@ -36,7 +36,14 @@ export const PROFILE = {
   ],
 
   // 주요 활동
-  activities: [{ year: '2026.09', text: '랄프톤(AI 에이전트 해커톤) 참가 · 여행 서비스 웹을 AI 에이전트 단독 빌드로 개발' }],
+  activities: [
+    { year: '2026.09', text: '랄프톤(AI 에이전트 해커톤) 참가 · 여행 서비스 웹을 AI 에이전트 단독 빌드로 개발' },
+    // 2026-10-27 추가 — 근거는 글 3(posts/2026-10-15-matter-ax-sprint-2026.md): 본선 20팀 중 우수상, 팀장과 2인 팀
+    {
+      year: '2026.10',
+      text: '지능형 홈 Matter AX Sprint 2026 해커톤 우수상(본선 20팀) · Matter over Thread + 온디바이스 Gemma로 유축 모유 팩 판정기 개발',
+    },
+  ],
 
   // 자격
   certification: ['전자기기기능사 (2021)', '전자기기생산 L2 (2021)', '전자기기하드웨어개발 L3 (2023)'],
